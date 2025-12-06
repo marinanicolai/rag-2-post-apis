@@ -36,8 +36,8 @@ class AskRequest(BaseModel):
 
 @app.post("/ask/")
 async def ask_question(req: AskRequest):
-    try:
-
+    try: 
+        # for debugging porposes you can use import pdb;pdb.set_trace() -pausing the executin and getting the var data, c al the code, n line by line
         chunks = search(req.q, top_k=2)
         answer = generate_answer_with_groq(req.q, chunks)
 
