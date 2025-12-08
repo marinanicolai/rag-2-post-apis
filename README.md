@@ -1,4 +1,4 @@
-```md
+
 # 📦 Supply Chain AI Assistant (RAG Application)
 
 An AI-powered **Retrieval-Augmented Generation (RAG)** application that allows users to upload business documents (Excel, PDF, Word) and ask intelligent questions about **inventory, suppliers, orders, and forecasts**.  
@@ -192,6 +192,4 @@ Contributions, feedback, and collaboration ideas are welcome!
 ## 📜 License
 
 MIT License
-
-```
 
