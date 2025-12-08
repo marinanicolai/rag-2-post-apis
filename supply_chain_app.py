@@ -3,6 +3,7 @@ import requests
 import json
 import pandas as pd
 
+
 # -------------------------
 # Streamlit UI Setup
 # -------------------------
