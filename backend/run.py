@@ -15,7 +15,7 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:5173",   # Vite dev
         "http://localhost:3000",   # CRA / other
-        "https://rag-2-post-apis-git-main-marinanicolais-projects.vercel.app/"
+        "https://rag-2-post-apis-git-main-marinanicolais-projects.vercel.app"
     ],
     allow_credentials=True,
     allow_methods=["*"],
