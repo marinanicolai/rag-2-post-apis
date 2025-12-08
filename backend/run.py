@@ -9,15 +9,13 @@ from llm_groq import generate_answer_with_groq
 
 app = FastAPI()
 
-# --- CORS so React can talk to this API ---
+# --- CORS so React (Vercel) can talk to this API ---
+# For now, keep it wide open while debugging.
+# We can lock this down later to your exact Vercel + localhost origins.
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:5173",   # Vite dev
-        "http://localhost:3000",   # CRA / other
-        "https://rag-2-post-apis-git-main-marinanicolais-projects.vercel.app"
-    ],
-    allow_credentials=True,
+    allow_origins=["*"],        # allow any origin for now
+    allow_credentials=False,    # must be False when using "*"
     allow_methods=["*"],
     allow_headers=["*"],
 )
