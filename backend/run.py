@@ -5,7 +5,7 @@ from pydantic import BaseModel
 import os
 
 from embedding import extract_and_chunk_text, search
-from main import generate_answer_with_groq
+from llm_groq import generate_answer_with_groq
 
 app = FastAPI()
 
