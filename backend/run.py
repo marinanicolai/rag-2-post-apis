@@ -1,3 +1,5 @@
+import time
+import logging
 from fastapi import FastAPI, File, UploadFile
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
@@ -29,9 +31,22 @@ os.makedirs(UPLOAD_DIR, exist_ok=True)
 async def health():
     return {"status": "ok"}
 
+logger = logging.getLogger("uvicorn")
 
 @app.post("/upload/")
 async def upload_file(file: UploadFile = File(...)):
+    start = time.time()
+    logger.info("➡️ /upload called with filename=%s", file.filename)
+
+    content = await file.read()
+    logger.info("✅ File read: %d bytes", len(content))
+
+    logger.info("⏳ Starting processing...")
+    # TODO: your current PDF/text splitting/embedding code here
+    # e.g. extract_text(content), split, embed, save, etc.
+    logger.info("✅ Finished processing in %.2f sec", time.time() - start)
+
+    return {"status": "ok"}
     try:
         file_path = os.path.join(UPLOAD_DIR, file.filename)
 
