@@ -51,162 +51,118 @@ const App: React.FC = () => {
   };
 
   return (
-    <main
-      style={{
-        maxWidth: 900,
-        margin: "0 auto",
-        padding: "2rem",
-        fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, sans-serif",
-        color: "#f5f5f5",
-        backgroundColor: "#111827",
-        minHeight: "100vh",
-      }}
-    >
-      <header style={{ marginBottom: "2rem", display: "flex", alignItems: "center", gap: "0.75rem" }}>
-        <span
-          style={{
-            fontSize: "2rem",
-          }}
-        >
-          📦
-        </span>
-        <h1 style={{ fontSize: "2.2rem", fontWeight: 700, margin: 0 }}>
-          Supply Chain AI Assistant
-        </h1>
+    <div className="app">
+      {/* HEADER */}
+      <header className="app-header">
+        <div className="app-logo">📦</div>
+        <div>
+          <p className="app-eyebrow">AI-powered supply chain insights</p>
+          <h1 className="app-title">Supply Chain AI Assistant</h1>
+          <p className="app-subtitle">
+            Upload policy documents or supplier data and ask natural language
+            questions about fairness, inventory and lead times.
+          </p>
+        </div>
       </header>
 
-      {/* Upload section */}
-      <section
-        style={{
-          padding: "1.5rem",
-          borderRadius: "0.75rem",
-          backgroundColor: "#1f2937",
-          marginBottom: "1.5rem",
-        }}
-      >
-        <h2 style={{ marginTop: 0, marginBottom: "0.75rem", fontSize: "1.25rem" }}>
-          1️⃣ Upload a document
-        </h2>
-        <p style={{ marginTop: 0, marginBottom: "0.75rem", fontSize: "0.9rem", color: "#9ca3af" }}>
-          Upload Excel, PDF, or Word files containing inventory, supplier, or
-          order data.
-        </p>
-
-        <div style={{ display: "flex", gap: "0.75rem", alignItems: "center", flexWrap: "wrap" }}>
-          <input
-            type="file"
-            accept=".xlsx,.xls,.pdf,.doc,.docx"
-            onChange={(e) => setFile(e.target.files?.[0] ?? null)}
-            style={{ color: "#e5e7eb" }}
-          />
-          <button
-            type="button"
-            onClick={handleUpload}
-            disabled={!file || isUploading}
-            style={{
-              padding: "0.5rem 1rem",
-              borderRadius: "999px",
-              border: "none",
-              cursor: !file || isUploading ? "not-allowed" : "pointer",
-              backgroundColor: !file || isUploading ? "#4b5563" : "#10b981",
-              color: "white",
-              fontWeight: 600,
-            }}
-          >
-            {isUploading ? "Uploading..." : "Upload & Embed"}
-          </button>
-        </div>
-
-        {uploadStatus && (
-          <p style={{ marginTop: "0.75rem", fontSize: "0.9rem", color: "#a7f3d0" }}>
-            {uploadStatus}
-          </p>
-        )}
-      </section>
-
-      {/* Ask a question section */}
-      <section
-        style={{
-          padding: "1.5rem",
-          borderRadius: "0.75rem",
-          backgroundColor: "#1f2937",
-        }}
-      >
-        <h2 style={{ marginTop: 0, marginBottom: "0.75rem", fontSize: "1.25rem" }}>
-          2️⃣ Ask a question
-        </h2>
-        <p style={{ marginTop: 0, marginBottom: "0.75rem", fontSize: "0.9rem", color: "#9ca3af" }}>
-          Ask about fairness, suppliers, lead times, order quantities, stock levels,
-          or any content inside your uploaded documents.
-        </p>
-
-        <textarea
-          rows={3}
-          value={question}
-          onChange={(e) => setQuestion(e.target.value)}
-          placeholder="Example: What is fairness in this policy? or Which supplier has the longest lead time?"
-          style={{
-            width: "100%",
-            padding: "0.75rem",
-            borderRadius: "0.5rem",
-            border: "1px solid #4b5563",
-            backgroundColor: "#111827",
-            color: "#e5e7eb",
-            resize: "vertical",
-            marginBottom: "0.75rem",
-          }}
-        />
-
-        <button
-          type="button"
-          onClick={handleAsk}
-          disabled={isAsking || !question.trim()}
-          style={{
-            padding: "0.5rem 1.25rem",
-            borderRadius: "999px",
-            border: "none",
-            cursor: isAsking || !question.trim() ? "not-allowed" : "pointer",
-            backgroundColor: isAsking || !question.trim() ? "#4b5563" : "#3b82f6",
-            color: "white",
-            fontWeight: 600,
-          }}
-        >
-          {isAsking ? "Thinking..." : "Ask"}
-        </button>
-
-        {/* Error */}
-        {error && (
-          <div
-            style={{
-              marginTop: "1rem",
-              padding: "0.75rem 1rem",
-              borderRadius: "0.5rem",
-              backgroundColor: "#7f1d1d",
-              color: "#fee2e2",
-              fontSize: "0.9rem",
-            }}
-          >
-            <strong>Error:</strong> {error}
+      <main className="app-main">
+        {/* UPLOAD CARD */}
+        <section className="card">
+          <div className="card-header">
+            <span className="card-pill">1</span>
+            <div>
+              <h2 className="card-title">Upload a document</h2>
+              <p className="card-description">
+                Upload Excel, PDF, or Word files containing inventory, supplier,
+                or order data. The assistant will index them with vector
+                embeddings.
+              </p>
+            </div>
           </div>
-        )}
 
-        {/* Answer */}
-        {answer && (
-          <div
-            style={{
-              marginTop: "1rem",
-              padding: "1rem",
-              borderRadius: "0.5rem",
-              backgroundColor: "#030712",
-              border: "1px solid #374151",
-            }}
-          >
-            <strong style={{ display: "block", marginBottom: "0.5rem" }}>Answer:</strong>
-            <p style={{ margin: 0, whiteSpace: "pre-wrap" }}>{answer}</p>
+          <div className="card-body">
+            <div className="upload-row">
+              <input
+                type="file"
+                accept=".xlsx,.xls,.pdf,.doc,.docx"
+                onChange={(e) => setFile(e.target.files?.[0] ?? null)}
+                className="file-input"
+              />
+
+              <button
+                type="button"
+                onClick={handleUpload}
+                disabled={!file || isUploading}
+                className={`btn btn-primary ${
+                  (!file || isUploading) && "btn-disabled"
+                }`}
+              >
+                {isUploading ? "Uploading…" : "Upload & Embed"}
+              </button>
+            </div>
+
+            {uploadStatus && (
+              <p className="status-text status-success">{uploadStatus}</p>
+            )}
           </div>
-        )}
-      </section>
-    </main>
+        </section>
+
+        {/* QUESTION CARD */}
+        <section className="card">
+          <div className="card-header">
+            <span className="card-pill">2</span>
+            <div>
+              <h2 className="card-title">Ask a question</h2>
+              <p className="card-description">
+                Ask about fairness, suppliers, lead times, order quantities or
+                stock levels. The model will retrieve relevant chunks and answer
+                based on your uploaded data.
+              </p>
+            </div>
+          </div>
+
+          <div className="card-body">
+            <textarea
+              rows={3}
+              value={question}
+              onChange={(e) => setQuestion(e.target.value)}
+              placeholder="Example: Which supplier has the longest lead time in this policy?"
+              className="question-textarea"
+            />
+
+            <button
+              type="button"
+              onClick={handleAsk}
+              disabled={isAsking || !question.trim()}
+              className={`btn btn-secondary ${
+                (isAsking || !question.trim()) && "btn-disabled"
+              }`}
+            >
+              {isAsking ? "Thinking…" : "Ask"}
+            </button>
+
+            {/* Error */}
+            {error && (
+              <div className="alert alert-error">
+                <strong>Error:</strong> {error}
+              </div>
+            )}
+
+            {/* Answer */}
+            {answer && (
+              <div className="answer-panel">
+                <div className="answer-label">Answer</div>
+                <p className="answer-text">{answer}</p>
+              </div>
+            )}
+          </div>
+        </section>
+      </main>
+
+      <footer className="app-footer">
+        <span>Built with FAISS, SentenceTransformers &amp; Groq LLaMA&nbsp;3.3</span>
+      </footer>
+    </div>
   );
 };
 
