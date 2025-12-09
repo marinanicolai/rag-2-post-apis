@@ -282,6 +282,40 @@ body {
   opacity: 0.8;
 }
 
+.file-label {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.file-input-hidden {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.btn-ghost {
+  background: linear-gradient(135deg, #020617, #020617);
+  color: #e5e7eb;
+  border: 1px solid rgba(148, 163, 184, 0.5);
+}
+
+.btn-ghost:hover {
+  border-color: var(--accent);
+  box-shadow: 0 0 20px var(--accent-glow);
+}
+
+.file-name {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  max-width: 220px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+
 /* Responsive */
 
 @media (max-width: 640px) {

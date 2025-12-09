@@ -82,12 +82,21 @@ const App: React.FC = () => {
 
           <div className="card-body">
             <div className="upload-row">
-              <input
-                type="file"
-                accept=".xlsx,.xls,.pdf,.doc,.docx"
-                onChange={(e) => setFile(e.target.files?.[0] ?? null)}
-                className="file-input"
-              />
+              <label className="file-label">
+                <input
+                  type="file"
+                  accept=".xlsx,.xls,.pdf,.doc,.docx"
+                  onChange={(e) => setFile(e.target.files?.[0] ?? null)}
+                  className="file-input-hidden"
+                />
+                <span className="btn btn-ghost">
+                  {file ? "Change file" : "Choose file"}
+                </span>
+              </label>
+
+              <span className="file-name">
+                {file ? file.name : "No file selected"}
+              </span>
 
               <button
                 type="button"
@@ -160,7 +169,9 @@ const App: React.FC = () => {
       </main>
 
       <footer className="app-footer">
-        <span>Built with FAISS, SentenceTransformers &amp; Groq LLaMA&nbsp;3.3</span>
+        <span>
+          Built with FAISS, SentenceTransformers &amp; Groq LLaMA&nbsp;3.3
+        </span>
       </footer>
     </div>
   );
