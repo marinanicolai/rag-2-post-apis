@@ -1,195 +1,137 @@
+# 📦 Supply Chain RAG Explorer (React Frontend)
 
-# 📦 Supply Chain AI Assistant (RAG Application)
+This repository contains the **React + TypeScript + Vite frontend** for a **Retrieval-Augmented Generation (RAG) system**.  
+It allows you to:
 
-An AI-powered **Retrieval-Augmented Generation (RAG)** application that allows users to upload business documents (Excel, PDF, Word) and ask intelligent questions about **inventory, suppliers, orders, and forecasts**.  
+- Upload documents (PDF, Word, Excel)
+- Ask natural-language questions
+- Get AI-generated answers based only on your uploaded data
 
-This system combines:
-- ✅ **FastAPI backend** for document ingestion, embeddings, and AI reasoning  
-- ✅ **Streamlit UI** for rapid internal testing and demos  
-- ✅ **Vector search + LLMs** for accurate, document-grounded answers  
-- ✅ Future-ready architecture for **React production frontend**
-
----
-
-## 🚀 Features
-
-- 📄 Upload business documents (Excel, PDF, DOCX)
-- 🧠 Automatic text extraction & chunking
-- 🔍 Vector embeddings for semantic search
-- 💬 AI-powered Q&A over your private data
-- 📊 Document-grounded answers (not hallucinations)
-- ⚡ Real-time interaction through a clean UI
-- 🔐 Designed for enterprise data security
+This repo is meant for **learning, exploring, and experimenting with RAG**, not just as a template UI.
 
 ---
 
-## 🧠 How RAG Works in This Project
+## 🧠 RAG System Architecture
 
-1. **User uploads a file**
-2. **Text is extracted and chunked**
-3. **Chunks are converted into embeddings**
-4. **Embeddings are stored in a vector database**
-5. **User asks a question**
-6. **Relevant chunks are retrieved**
-7. **LLM generates an answer using only retrieved context**
+Below is the high-level architecture of the full system (Frontend + Backend + AI Pipeline):
 
-✅ This ensures **accurate, secure, and explainable AI responses**
+![RAG Architecture](./rag-frontend/src/assets/architecture-diagram.png)
 
 ---
 
-## 🏗️ Architecture Overview
+## 🧱 Tech Stack
 
+* ⚛️ React 19
+* 🟦 TypeScript
+* ⚡ Vite
+* 🎨 Custom dark/green UI
+* 🌐 REST API integration (`upload` + `ask`)
+* 🧠 RAG Pipeline (via FastAPI backend)
+* 🔍 FAISS Vector Database
+* 🤖 Groq LLaMA 3.3
+
+---
+
+## 📂 What This Repo Includes
+
+* Upload UI for documents
+* Question input & answer panel
+* Status messages & error handling
+* API connection layer (`src/api.ts`)
+* Ready for deployment on **Vercel**
+
+❗ This repo does **not** include the backend.
+You must run the FastAPI RAG backend separately.
+
+---
+
+## 🔑 Environment Setup
+
+Create a `.env` file in the project root:
+
+```env
+VITE_API_BASE_URL=http://localhost:8000
 ```
 
-Frontend (Streamlit → React)
-│
-▼
-FastAPI Backend (RAG Engine)
-│
-▼
-Embeddings → Vector Search → LLM Response
+If using a deployed backend (Railway, etc.):
 
-````
-
-| Layer | Technology |
-|--------|-------------|
-| Frontend (Current) | Streamlit |
-| Frontend (Planned) | React + TypeScript |
-| Backend API | FastAPI |
-| Embeddings | OpenAI / HF |
-| Vector DB | FAISS |
-| LLM | GPT / Open Source |
-| File Parsing | pandas, PyMuPDF, python-docx |
+```env
+VITE_API_BASE_URL=https://your-backend-url.up.railway.app
+```
 
 ---
 
-## 🎯 Use Case Examples
-
-- ✅ Analyze supplier risks from Excel sheets  
-- ✅ Query large procurement reports instantly  
-- ✅ Ask natural language questions about inventory  
-- ✅ Compare sales forecasts vs actuals  
-- ✅ Internal enterprise knowledge assistant  
-
----
-
-## 🧪 Development UI (Streamlit)
-
-The Streamlit UI is used as a:
-- Rapid prototyping interface  
-- Debug console for embeddings and retrieval  
-- Internal demo tool  
-
-It will later be replaced by a **React enterprise frontend** for:
-- Authentication
-- User roles
-- Multi-tenant usage
-- Usage analytics
-- Production deployment
-
----
-
-## 🖥️ Running the Project Locally
-
-### 1️⃣ Install Dependencies
+## ▶️ Run Locally
 
 ```bash
-pip install -r requirements.txt
-````
+# 1. Clone the repo
+git clone https://github.com/your-username/your-repo-name.git
+
+# 2. Move into the project
+cd your-repo-name
+
+# 3. Install dependencies
+npm install
+
+# 4. Start the app
+npm run dev
+```
+
+Then open:
+
+```
+http://localhost:5173
+```
+
+Make sure your **FastAPI backend is running at the API URL**.
 
 ---
 
-### 2️⃣ Start the FastAPI Backend
+## 🔄 How the RAG Flow Works
+
+1. User uploads a file
+2. Frontend sends it to the FastAPI backend
+3. Backend:
+
+   * Chunks the file
+   * Creates embeddings
+   * Stores them in FAISS
+4. User asks a question
+5. Backend:
+
+   * Finds the most relevant chunks
+   * Sends them to Groq LLaMA
+6. AI-generated answer is returned to the UI
+
+---
+
+## 🚀 Deployment
+
+This frontend is optimized for:
+
+* ✅ **Vercel**
+* ✅ **Netlify**
+* ✅ Any static Vite-compatible host
+
+Build command:
 
 ```bash
-uvicorn run:app --reload
+npm run build
 ```
 
-Backend runs at:
-
-```
-http://127.0.0.1:8000
-```
-
----
-
-### 3️⃣ Start the Streamlit UI
+Output folder:
 
 ```bash
-streamlit run supply_chain_app.py
-```
-
-UI runs at:
-
-```
-http://localhost:8501
+dist
 ```
 
 ---
 
-## 🧩 API Endpoints
+## 🎯 Who This Is For
 
-| Method | Endpoint   | Purpose                  |
-| ------ | ---------- | ------------------------ |
-| POST   | `/upload/` | Upload + embed documents |
-| POST   | `/ask/`    | Ask questions            |
-| GET    | `/health`  | System health check      |
-
----
-
-## 📌 Roadmap
-
-✅ Phase 1 – Streamlit RAG UI
-✅ Phase 2 – FastAPI AI Backend
-🚧 Phase 3 – React Frontend
-🚧 Phase 4 – Auth & User Sessions
-🚧 Phase 5 – Production Cloud Deployment
-🚧 Phase 6 – Monitoring & Analytics
+* Developers learning **RAG architecture**
+* Students exploring **LLMs + vector databases**
+* Frontend engineers integrating **real AI systems**
+* Anyone building **AI-powered document Q&A**
 
 ---
-
-## 🔐 Data Security
-
-* ✅ No public document exposure
-* ✅ Private embeddings only
-* ✅ Role-based access (planned)
-* ✅ API-level request validation
-* ✅ Secure model inference boundary
-
----
-
-## 👩‍💻 Author
-
-**Marina Nicolai**
-Senior Frontend / Full-Stack Developer transitioning into **AI & ML Engineering**
-Specializes in:
-
-* RAG pipelines
-* AI internal tools
-* Enterprise BI & automation
-* React, FastAPI, Python, AWS
-
----
-
-## ⭐ Why This Project Matters
-
-This project demonstrates:
-
-* ✅ End-to-end AI system design
-* ✅ Real business value
-* ✅ Production-ready architecture
-* ✅ Scalable frontend/backend separation
-* ✅ Responsible use of enterprise AI
-
----
-
-## 🤝 Contributions
-
-Contributions, feedback, and collaboration ideas are welcome!
-
----
-
-## 📜 License
-
-MIT License
-
