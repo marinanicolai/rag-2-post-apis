@@ -11,16 +11,21 @@ const App: React.FC = () => {
   const [isUploading, setIsUploading] = useState(false);
   const [isAsking, setIsAsking] = useState(false);
 
+  // ✅ NEW: track whether any document has been successfully uploaded/embedded
+  const [hasUploadedDoc, setHasUploadedDoc] = useState(false);
+
   const handleUpload = async () => {
     if (!file) return;
     setError("");
     setAnswer("");
     setUploadStatus("Uploading & embedding...");
     setIsUploading(true);
+    setHasUploadedDoc(false); // reset until this upload succeeds
 
     try {
       const res = await uploadFile(file);
       setUploadStatus(res.message);
+      setHasUploadedDoc(true); // ✅ mark that we now have indexed data
     } catch (err: unknown) {
       console.error("Upload error:", err);
       const message =
@@ -32,7 +37,7 @@ const App: React.FC = () => {
   };
 
   const handleAsk = async () => {
-    if (!question.trim()) return;
+    if (!question.trim() || !hasUploadedDoc) return; // extra guard
     setError("");
     setAnswer("");
     setIsAsking(true);
@@ -139,16 +144,25 @@ const App: React.FC = () => {
               className="question-textarea"
             />
 
+            {/* ✅ Disable Ask if no doc uploaded yet */}
             <button
               type="button"
               onClick={handleAsk}
-              disabled={isAsking || !question.trim()}
+              disabled={isAsking || !question.trim() || !hasUploadedDoc}
               className={`btn btn-secondary ${
-                (isAsking || !question.trim()) && "btn-disabled"
+                (isAsking || !question.trim() || !hasUploadedDoc) &&
+                "btn-disabled"
               }`}
             >
               {isAsking ? "Thinking…" : "Ask"}
             </button>
+
+            {!hasUploadedDoc && (
+              <p className="status-text">
+                Please upload and embed at least one document before asking a
+                question.
+              </p>
+            )}
 
             {/* Error */}
             {error && (
