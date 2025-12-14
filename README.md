@@ -15,7 +15,7 @@ This repo is meant for **learning, exploring, and experimenting with RAG**, not 
 
 Below is the high-level architecture of the full system (Frontend + Backend + AI Pipeline):
 
-![RAG Architecture](./rag-frontend/src/assets/architecture-diagram.png)
+![RAG Architecture](./rag-frontend/src/assets/rag-1.png)
 
 ---
 
