@@ -1,15 +1,22 @@
 # 📦 Supply Chain RAG Explorer (React Frontend)
 
+-----
 
-Same root cause showing up on the hooks path too — makes sense this is one shared bug across skills/hooks/plugins rather than three separate ones. Here's a prompt that has Claude fix it everywhere at once:
 
 ---
 
-*Confirmed the same bug affects hooks, not just plugins: after deleting a rejected hook from the Admin Review Queue, resubmitting a hook with the same slug fails with "Hook with slug 'onboardin-hooks' already exists" — even though it was deleted. This is the identical pattern already found with plugin versions ("Version '1.0.0' already exists..." after deleting a rejected plugin submission).*
+*Add optional support for reference files in the Skill submission flow (both the manual form and the SKILL.md upload/folder-upload paths). Skills can optionally include a `references/` subfolder alongside `SKILL.md` (as seen in `skills/onboarding-tour/references/architecture.md`, `glossary.md`, `ownership.md`) — right now there's no way to attach these when submitting.*
 
-*This points to one shared root cause rather than three separate bugs: investigate the delete/reject logic across all three submission types (skills, hooks, plugins) and find where uniqueness checks (slug for hooks/skills, version for plugins) are validated against records that a "Delete" in the admin panel doesn't actually remove — likely a shared soft-delete pattern, or the delete action only updates status without clearing/freeing the unique key, or the uniqueness query doesn't filter out deleted/rejected rows.*
+*1. In the manual submission form, add an optional "Reference Files" section where users can upload 0–3 (or however many is reasonable) supporting `.md` files, each with its own filename.*
 
-*Fix the shared logic once: either make admin delete a true hard-delete of the record, or (if history should be preserved) exclude soft-deleted/rejected records from all uniqueness checks (slug, version, etc.) across skills, hooks, and plugins. Add regression tests for all three: submit → reject → delete → resubmit with the same slug/version should succeed in each case.*
+*2. In the drag-and-drop / folder-upload flow, detect any `references/*.md` files inside a skill's folder and list them in the detected-files summary as attached reference docs for that skill (not as separate skills).*
+
+*3. Store these files as supporting attachments tied to the skill record — keep them clearly separate from the skill's own name/description, since we just fixed a bug where a `references/architecture.md` file was mistakenly parsed as if it were the skill itself. Reuse that fix's boundary: reference files should never feed the skill's name/description parsing.*
+
+*4. Show the reference files in the Admin review panel (read-only list/preview) alongside the skill content, and make them downloadable/viewable on the skill's public page after approval.*
+
+*Keep this optional — a skill with no `references/` folder should submit exactly as it does today.*
+
 ----
 
 
