@@ -4,12 +4,17 @@
 Here's a short prompt for Claude:
 
 ---
+Here's a short prompt for Claude:
 
-*In the plugin submission flow, the folder detection correctly finds `skills/onboarding-tour/SKILL.md` with its real name and description (visible correctly in the "Submit New Plugin" form itself: skill name `onboarding-tour`, description starting "onboarding, walk me through this repo..."). But once submitted, the Review Queue shows a completely different, wrong skill entry: name "ahitecture" and description "the skills investigates the architecture of the app" — this looks like it's actually pulling from the skill's `references/architecture.md` file instead of `SKILL.md`, and mangling the name in the process (dropping characters from "architecture" → "ahitecture").*
+---
 
-*Investigate the plugin submission/save logic — specifically wherever it creates the actual skill record from the bundled plugin data (as opposed to what's shown live in the submission form, which is correct). Find why it's reading `references/architecture.md` instead of the skill's own `SKILL.md` for the name and description, and why the name string gets corrupted (check for an off-by-index substring, regex, or trim operation applied to the filename or heading text).*
+*After a plugin submission ("onboarding-context-pack", version 1.0.0) was rejected and deleted from the Admin review queue, re-submitting the same plugin/version now fails with "Version '1.0.0' already exists for plugin 'onboarding-context-pack' — choose a different version." The submission was deleted, so this uniqueness check shouldn't still be blocking it.*
 
-*Fix it so the skill record created/reviewed for a plugin-bundled skill uses the exact same parsed `SKILL.md` name/description that the submission form already displays correctly — the create/save step should reuse that same parsed data, not re-parse or pull from a different file. Add a test asserting the skill created from this plugin (name `onboarding-tour`, correct description) matches what the form showed before submission.*
+*Investigate the plugin version-uniqueness check and the admin delete/reject action: find whether "deleting" a rejected submission actually removes its row from the table the version-check queries, or just soft-deletes/hides it from the admin UI while leaving it in the database (or leaves an orphaned record behind that the uniqueness constraint still counts). Also check whether "Reject" and "Delete" are two different actions in the admin panel and whether only one of them properly cleans up the record.*
+
+*Fix it so that once a submission is deleted (or, if rejection alone should free up the version, once it's rejected), its plugin/version combination is no longer considered "taken" and the same version can be resubmitted. If there's a legitimate reason to keep rejected submissions around for audit/history, exclude soft-deleted/rejected records from the uniqueness check instead of hard-deleting them — but either way, resubmitting a version after rejection needs to work.*
+
+----
 
 
 This repository contains the **React + TypeScript + Vite frontend** for a **Retrieval-Augmented Generation (RAG) system**.  
