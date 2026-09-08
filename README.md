@@ -1,18 +1,6 @@
 # 📦 Supply Chain RAG Explorer (React Frontend)
 
 
-Here's a short prompt for Claude:
-
----
-Here's a short prompt for Claude:
-
----
-
-*After a plugin submission ("onboarding-context-pack", version 1.0.0) was rejected and deleted from the Admin review queue, re-submitting the same plugin/version now fails with "Version '1.0.0' already exists for plugin 'onboarding-context-pack' — choose a different version." The submission was deleted, so this uniqueness check shouldn't still be blocking it.*
-
-*Investigate the plugin version-uniqueness check and the admin delete/reject action: find whether "deleting" a rejected submission actually removes its row from the table the version-check queries, or just soft-deletes/hides it from the admin UI while leaving it in the database (or leaves an orphaned record behind that the uniqueness constraint still counts). Also check whether "Reject" and "Delete" are two different actions in the admin panel and whether only one of them properly cleans up the record.*
-
-*Fix it so that once a submission is deleted (or, if rejection alone should free up the version, once it's rejected), its plugin/version combination is no longer considered "taken" and the same version can be resubmitted. If there's a legitimate reason to keep rejected submissions around for audit/history, exclude soft-deleted/rejected records from the uniqueness check instead of hard-deleting them — but either way, resubmitting a version after rejection needs to work.*
 
 ----
 
