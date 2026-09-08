@@ -1,7 +1,15 @@
 # 📦 Supply Chain RAG Explorer (React Frontend)
 
 
+Same root cause showing up on the hooks path too — makes sense this is one shared bug across skills/hooks/plugins rather than three separate ones. Here's a prompt that has Claude fix it everywhere at once:
 
+---
+
+*Confirmed the same bug affects hooks, not just plugins: after deleting a rejected hook from the Admin Review Queue, resubmitting a hook with the same slug fails with "Hook with slug 'onboardin-hooks' already exists" — even though it was deleted. This is the identical pattern already found with plugin versions ("Version '1.0.0' already exists..." after deleting a rejected plugin submission).*
+
+*This points to one shared root cause rather than three separate bugs: investigate the delete/reject logic across all three submission types (skills, hooks, plugins) and find where uniqueness checks (slug for hooks/skills, version for plugins) are validated against records that a "Delete" in the admin panel doesn't actually remove — likely a shared soft-delete pattern, or the delete action only updates status without clearing/freeing the unique key, or the uniqueness query doesn't filter out deleted/rejected rows.*
+
+*Fix the shared logic once: either make admin delete a true hard-delete of the record, or (if history should be preserved) exclude soft-deleted/rejected records from all uniqueness checks (slug, version, etc.) across skills, hooks, and plugins. Add regression tests for all three: submit → reject → delete → resubmit with the same slug/version should succeed in each case.*
 ----
 
 
