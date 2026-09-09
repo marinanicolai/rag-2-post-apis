@@ -1,7 +1,21 @@
 # 📦 Supply Chain RAG Explorer (React Frontend)
 
 -----
+Here's a short prompt for Claude:
 
+---
+
+*The "Submit New Plugin" form has no field to view or set the plugin's version — it's apparently read silently from `.claude-plugin/plugin.json` (or defaulted), so when a version conflict happens ("Version '1.0.0' already exists..."), the user has no way to fix it from the UI; they'd have to edit the plugin.json file locally and re-upload the whole folder.*
+
+*Add explicit version control to the plugin submission form:*
+
+*1. Show a visible, editable "Version" field in the Plugin Details section, pre-filled from the detected `plugin.json` version if present (or defaulting to `1.0.0` / the next patch version if the plugin slug already exists).*
+
+*2. Validate it as semver (`x.y.z`) on the client side, and check uniqueness against existing versions for that plugin slug in real time (or on submit) — surfacing the same "already exists" error inline next to the field instead of only at the bottom near the submit button, so the user can just bump the number and resubmit without re-uploading.*
+
+*3. When a plugin with that slug already exists (this is an update to a published/reviewed plugin, not a first submission), show the current latest version for reference and suggest the next version (patch/minor/major) rather than making the user guess.*
+
+*4. Keep whatever the user sets in this field as the source of truth for submission — don't silently overwrite it from `plugin.json` after the user edits it.*
 
 ---
 
