@@ -1,35 +1,18 @@
 # 📦 Supply Chain RAG Explorer (React Frontend)
 
 -----
-Here's a short prompt for Claude:
 
----
 
-*The "Submit New Plugin" form has no field to view or set the plugin's version — it's apparently read silently from `.claude-plugin/plugin.json` (or defaulted), so when a version conflict happens ("Version '1.0.0' already exists..."), the user has no way to fix it from the UI; they'd have to edit the plugin.json file locally and re-upload the whole folder.*
 
-*Add explicit version control to the plugin submission form:*
+*When a plugin folder is submitted and lands in the Admin review view, the file paths shown don't match what was uploaded — they've been renamed with an added hash suffix, and in the hook's case the file itself changed type:*
 
-*1. Show a visible, editable "Version" field in the Plugin Details section, pre-filled from the detected `plugin.json` version if present (or defaulting to `1.0.0` / the next patch version if the plugin slug already exists).*
+- *Uploaded: `skills/onboarding-tour/SKILL.md` → Review shows: `skills/onboarding-tour-cf1d104f/SKILL.md` (slug + hash appended to the folder name)*
+- *Uploaded: `hooks/hooks.json` → Review shows: `hooks/offers-a-one-time-onboarding-tour-on-first-session-in-a-repo-then-stays-silent-19a43813/HOOK.md` (folder renamed to a slugified version of the hook's description + hash, and the file itself changed from `hooks.json` to `HOOK.md` — worth checking whether the actual JSON content survived this at all, since the preview just shows the description text repeated, not the hook config)*
+- *`references/architecture.md` kept its own filename, only the parent skill folder was renamed.*
 
-*2. Validate it as semver (`x.y.z`) on the client side, and check uniqueness against existing versions for that plugin slug in real time (or on submit) — surfacing the same "already exists" error inline next to the field instead of only at the bottom near the submit button, so the user can just bump the number and resubmit without re-uploading.*
+*Find where the plugin submission is persisted/stored for review (the step between the folder upload and the Admin Review Queue) and identify why it's regenerating folder/file names — likely a slugify-for-uniqueness step (turning the skill/hook's name or description into a slug and appending a content hash) that's being applied to storage paths instead of just being used as an internal ID.*
 
-*3. When a plugin with that slug already exists (this is an update to a published/reviewed plugin, not a first submission), show the current latest version for reference and suggest the next version (patch/minor/major) rather than making the user guess.*
-
-*4. Keep whatever the user sets in this field as the source of truth for submission — don't silently overwrite it from `plugin.json` after the user edits it.*
-
----
-
-*Add optional support for reference files in the Skill submission flow (both the manual form and the SKILL.md upload/folder-upload paths). Skills can optionally include a `references/` subfolder alongside `SKILL.md` (as seen in `skills/onboarding-tour/references/architecture.md`, `glossary.md`, `ownership.md`) — right now there's no way to attach these when submitting.*
-
-*1. In the manual submission form, add an optional "Reference Files" section where users can upload 0–3 (or however many is reasonable) supporting `.md` files, each with its own filename.*
-
-*2. In the drag-and-drop / folder-upload flow, detect any `references/*.md` files inside a skill's folder and list them in the detected-files summary as attached reference docs for that skill (not as separate skills).*
-
-*3. Store these files as supporting attachments tied to the skill record — keep them clearly separate from the skill's own name/description, since we just fixed a bug where a `references/architecture.md` file was mistakenly parsed as if it were the skill itself. Reuse that fix's boundary: reference files should never feed the skill's name/description parsing.*
-
-*4. Show the reference files in the Admin review panel (read-only list/preview) alongside the skill content, and make them downloadable/viewable on the skill's public page after approval.*
-
-*Keep this optional — a skill with no `references/` folder should submit exactly as it does today.*
+*Fix it so the review view displays the original folder/file paths and names exactly as uploaded (`skills/onboarding-tour/SKILL.md`, `hooks/hooks.json`, etc.) — any internal slug+hash the system needs for storage/dedup should stay an internal identifier, never overwrite the user-facing path or the file's own name/extension. Also confirm the hook's actual JSON content (not just its description) is what's actually being stored and shown, not a synthesized placeholder.*
 
 ----
 
