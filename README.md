@@ -1,19 +1,41 @@
 # 📦 Supply Chain RAG Explorer (React Frontend)
 
 -----
+Investigate and fix a bug in the skillhub app's SKILL.md generation.
 
+Context: When a user uploads a skill/plugin file, the app auto-generates a
+SKILL.md with YAML frontmatter containing `name` and `description` fields,
+e.g.:
+---
+name: <kebab-case-slug>
+description: <what it does and when to trigger it>
+---
 
+Bug: generated SKILL.md files have incorrect frontmatter — sometimes it's
+an empty object (`{}`) instead of populated YAML, sometimes `name` doesn't
+match the actual skill being uploaded.
 
-*When a plugin folder is submitted and lands in the Admin review view, the file paths shown don't match what was uploaded — they've been renamed with an added hash suffix, and in the hook's case the file itself changed type:*
+Please:
+1. Find the upload handler and the code path that builds/writes SKILL.md
+   (search for "SKILL.md", "frontmatter", or wherever the file is
+   templated).
+2. Trace where `name` and `description` are supposed to come from — the
+   uploaded file's own frontmatter, a form field, the filename, or an LLM
+   call — and find exactly where that data gets lost, overwritten, or
+   serialized wrong (e.g. dumping an empty dict instead of parsed fields,
+   a key-mapping mismatch, or the YAML serializer stripping values).
+3. Reproduce the bug with a sample upload and show me the broken output
+   vs. the expected output.
+4. Fix the root cause so every generated SKILL.md has valid, non-empty
+   frontmatter matching the schema above.
+5. Add or update a test that uploads a sample skill and asserts the
+   resulting SKILL.md has the correct `name` and `description`.
+6. Flag edge cases you find along the way — e.g. should an uploaded file's
+   own existing frontmatter be preserved or always regenerated; how are
+   duplicate or invalid names handled; what happens when description is
+   missing from the source file.
 
-- *Uploaded: `skills/onboarding-tour/SKILL.md` → Review shows: `skills/onboarding-tour-cf1d104f/SKILL.md` (slug + hash appended to the folder name)*
-- *Uploaded: `hooks/hooks.json` → Review shows: `hooks/offers-a-one-time-onboarding-tour-on-first-session-in-a-repo-then-stays-silent-19a43813/HOOK.md` (folder renamed to a slugified version of the hook's description + hash, and the file itself changed from `hooks.json` to `HOOK.md` — worth checking whether the actual JSON content survived this at all, since the preview just shows the description text repeated, not the hook config)*
-- *`references/architecture.md` kept its own filename, only the parent skill folder was renamed.*
-
-*Find where the plugin submission is persisted/stored for review (the step between the folder upload and the Admin Review Queue) and identify why it's regenerating folder/file names — likely a slugify-for-uniqueness step (turning the skill/hook's name or description into a slug and appending a content hash) that's being applied to storage paths instead of just being used as an internal ID.*
-
-*Fix it so the review view displays the original folder/file paths and names exactly as uploaded (`skills/onboarding-tour/SKILL.md`, `hooks/hooks.json`, etc.) — any internal slug+hash the system needs for storage/dedup should stay an internal identifier, never overwrite the user-facing path or the file's own name/extension. Also confirm the hook's actual JSON content (not just its description) is what's actually being stored and shown, not a synthesized placeholder.*
-
+Show me the diff and a before/after example of the generated SKILL.md.
 ----
 
 
