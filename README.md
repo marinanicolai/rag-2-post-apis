@@ -1,41 +1,40 @@
 # 📦 Supply Chain RAG Explorer (React Frontend)
 
 -----
-Investigate and fix a bug in the skillhub app's SKILL.md generation.
+Add a "reference files" feature to the hook submission flow, mirroring the
+one that already exists for skill submissions.
 
-Context: When a user uploads a skill/plugin file, the app auto-generates a
-SKILL.md with YAML frontmatter containing `name` and `description` fields,
-e.g.:
----
-name: <kebab-case-slug>
-description: <what it does and when to trigger it>
----
-
-Bug: generated SKILL.md files have incorrect frontmatter — sometimes it's
-an empty object (`{}`) instead of populated YAML, sometimes `name` doesn't
-match the actual skill being uploaded.
+Context: When submitting a skill for review, users can attach reference
+files (extra docs referenced by the skill, e.g. stored under
+`skills/<skill-name>/references/`) that reviewers can see alongside the
+main submission. Hooks don't have this capability yet — add it.
 
 Please:
-1. Find the upload handler and the code path that builds/writes SKILL.md
-   (search for "SKILL.md", "frontmatter", or wherever the file is
-   templated).
-2. Trace where `name` and `description` are supposed to come from — the
-   uploaded file's own frontmatter, a form field, the filename, or an LLM
-   call — and find exactly where that data gets lost, overwritten, or
-   serialized wrong (e.g. dumping an empty dict instead of parsed fields,
-   a key-mapping mismatch, or the YAML serializer stripping values).
-3. Reproduce the bug with a sample upload and show me the broken output
-   vs. the expected output.
-4. Fix the root cause so every generated SKILL.md has valid, non-empty
-   frontmatter matching the schema above.
-5. Add or update a test that uploads a sample skill and asserts the
-   resulting SKILL.md has the correct `name` and `description`.
-6. Flag edge cases you find along the way — e.g. should an uploaded file's
-   own existing frontmatter be preserved or always regenerated; how are
-   duplicate or invalid names handled; what happens when description is
-   missing from the source file.
+1. Find how the skill submission's reference-files feature is built end
+   to end: the form field/UI component for attaching files, the backend
+   model/schema that stores the file references and how they're
+   associated with a skill, the storage path convention, any file-type
+   or size validation, and how reference files are displayed in the
+   review UI.
+2. Find the current hook submission form/flow (form component, backend
+   model, storage handling) so you know what you're extending and
+   whether the two flows already share any submission logic.
+3. Add the same capability to hook submissions:
+   - Reuse the skill's upload component/service rather than duplicating
+     it, if the codebase structure makes that possible.
+   - Use an equivalent storage convention for hooks (e.g.
+     `hooks/<hook-name>/references/`) and the same data-model pattern
+     (association + validation) that skills use.
+   - Surface reference files in the hook review UI the same way they
+     appear for skill review.
+4. Match the skill feature's validation rules (file types, size limits,
+   required vs. optional) unless something about hooks needs different
+   rules — flag that instead of guessing.
+5. Add tests mirroring whatever tests cover the skill reference-files
+   feature, adapted for hooks.
 
-Show me the diff and a before/after example of the generated SKILL.md.
+Show me the diff, and call out anywhere you had to diverge from the
+skill implementation because of how hooks are structured differently.
 ----
 
 
