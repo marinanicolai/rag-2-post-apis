@@ -1,48 +1,41 @@
 # 📦 Supply Chain RAG Explorer (React Frontend)
 
 -----
-Fix a bug in hook submission: it's creating an unnecessary per-hook folder
-and a redundant HOOK.md file that shouldn't exist.
+Fix incorrect stats on the plugin detail card (Versions / Published /
+Skills / Hooks counts).
 
-Context: When a skill is submitted, the app creates
-`skills/<skill-name>/SKILL.md` — one folder per skill, with a markdown
-file describing it. That's correct for skills. Hook submission is now
-doing the same thing (likely because it reuses shared submission logic),
-producing:
-
-  hooks/<long-slugified-description>/HOOK.md
-  hooks/<long-slugified-description>/hooks.json
-
-This is wrong. There should be no per-hook subfolder and no HOOK.md —
-hook definitions belong directly in a single hooks.json (matcher +
-command entries), matching the standard Claude Code plugin hooks
-structure (a flat `hooks/hooks.json` at the plugin root, not nested
-per-hook folders with their own doc file).
+Context: An approved plugin ("onboarding-context-pack") actually contains
+1 hook (hooks.json), 1 skill (SKILL.md), and 3 reference files. The
+plugin detail card is showing "5 Skills" and "5 Hooks" — both wrong, and
+suspiciously identical, which suggests they aren't being counted
+independently. There's also no "References" stat shown at all.
 
 Please:
-1. Find the code path that packages a submitted hook into the plugin's
-   file structure, and confirm it's sharing logic with the skill
-   packaging path (the one that creates `skills/<name>/SKILL.md`).
-2. Identify exactly where it's (a) generating a folder name from the
-   hook's description text, and (b) writing a HOOK.md file — these
-   should not happen for hooks.
-3. Fix it so a submitted hook is written into a single hooks.json
-   (creating `hooks/hooks.json` if it doesn't exist yet, or appending/
-   merging the new hook entry into it if it does), with no wrapper
-   folder and no HOOK.md.
-4. Make sure this doesn't break the reference-files feature we just
-   added for hooks — reference files should still attach to the hook
-   submission correctly without needing the now-removed folder as their
-   anchor point. If reference files were relying on that folder to have
-   somewhere to live, tell me and propose where they should live instead
-   (e.g. alongside hooks.json, or wherever skills' references/ directory
-   pattern would map for a flat-file structure).
-5. Update or add tests that submit a hook and assert the resulting file
-   list matches the expected flat structure (no extra folder, no
-   HOOK.md).
+1. Find the component that renders this card's stat row (Versions,
+   Published, Skills, Hooks) and trace where each number comes from —
+   a stored count on the plugin/version record, or something computed
+   on the fly from the bundled files.
+2. If computed from files: check whether it's counting distinct skill
+   directories / hook entries correctly, or whether it's counting
+   something broader (e.g. total files, total lines, or a leftover count
+   from the extra-folder-per-hook bug we just fixed) and mislabeling that
+   same number under both "Skills" and "Hooks".
+3. If stored on the record: check whether it's set at submission time,
+   approval time, or version-publish time, and whether it's being
+   recalculated correctly after edits/approval — or whether it's stale
+   from before other fixes landed.
+4. Fix the counting so Skills = number of skills in the approved bundle,
+   Hooks = number of hook entries, independently and accurately.
+5. Decide (and tell me) whether reference files should get their own
+   stat ("3 References") next to Skills/Hooks, or are intentionally
+   omitted — if intentional, confirm that's still true post-fix; if not,
+   add it.
+6. Add a regression test: submit/approve a plugin with a known number of
+   skills, hooks, and reference files, and assert the card's displayed
+   counts match exactly.
 
-Show me the diff, and the before/after file listing for a hook
-submission.
+Show me the diff, and a screenshot or rendered output of the fixed card
+for this same plugin.
 ----
 
 
