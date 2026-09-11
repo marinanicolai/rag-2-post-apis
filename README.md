@@ -1,40 +1,16 @@
 # 📦 Supply Chain RAG Explorer (React Frontend)
 
 -----
-Add a "reference files" feature to the hook submission flow, mirroring the
-one that already exists for skill submissions.
+Here's a short prompt for Claude:
 
-Context: When submitting a skill for review, users can attach reference
-files (extra docs referenced by the skill, e.g. stored under
-`skills/<skill-name>/references/`) that reviewers can see alongside the
-main submission. Hooks don't have this capability yet — add it.
+---
 
-Please:
-1. Find how the skill submission's reference-files feature is built end
-   to end: the form field/UI component for attaching files, the backend
-   model/schema that stores the file references and how they're
-   associated with a skill, the storage path convention, any file-type
-   or size validation, and how reference files are displayed in the
-   review UI.
-2. Find the current hook submission form/flow (form component, backend
-   model, storage handling) so you know what you're extending and
-   whether the two flows already share any submission logic.
-3. Add the same capability to hook submissions:
-   - Reuse the skill's upload component/service rather than duplicating
-     it, if the codebase structure makes that possible.
-   - Use an equivalent storage convention for hooks (e.g.
-     `hooks/<hook-name>/references/`) and the same data-model pattern
-     (association + validation) that skills use.
-   - Surface reference files in the hook review UI the same way they
-     appear for skill review.
-4. Match the skill feature's validation rules (file types, size limits,
-   required vs. optional) unless something about hooks needs different
-   rules — flag that instead of guessing.
-5. Add tests mirroring whatever tests cover the skill reference-files
-   feature, adapted for hooks.
+*The Plugin detail page (`/plugins/onboarding-context-pack`) and the Skill detail page (`/skills/mini`) should feel like the same design system, but they diverge significantly in the Install and Versions areas:*
 
-Show me the diff, and call out anywhere you had to diverge from the
-skill implementation because of how hooks are structured differently.
+*- The Skill page's Install tab has a rich "Installation Pipeline" diagram (SkillHub Server → Download → `~/.claude/skills/`), a "Quick Install" section with a direct download button + numbered CLI steps, and a separate "Copy & Paste Install" section with a "Copy Skill Content" button and manual steps.*
+*- The Plugin page's "How to Use" tab only has a plain numbered text list (extract zip, open terminal, run `/plugin`, choose install from local path) — no pipeline visual, no direct download button, no copy-paste option, and it's under a differently-named tab ("How to Use" vs "Install").*
+
+*Audit both detail-page components/routes and bring the Plugin page's Install experience up to parity with the Skill page's: same tab naming and order where it makes sense, the same installation-pipeline visual (adapted for a plugin's actual install path, e.g. into a plugins directory or via `/plugin install`), a one-click download of the plugin package, and a copy-paste fallback if applicable to plugins. Also check the stat row and remaining subtabs (Overview, Versions, and Skill's "Full Skill"/"Reviews" vs Plugin's "Members") for other inconsistencies worth resolving so both detail pages share one consistent layout and interaction pattern, adjusting only what's genuinely equivalent between a skill and a plugin (a plugin bundling multiple skills/hooks may legitimately need extra sections like "Members").*
 ----
 
 
