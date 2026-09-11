@@ -1,16 +1,48 @@
 # 📦 Supply Chain RAG Explorer (React Frontend)
 
 -----
-Here's a short prompt for Claude:
+Fix a bug in hook submission: it's creating an unnecessary per-hook folder
+and a redundant HOOK.md file that shouldn't exist.
 
----
+Context: When a skill is submitted, the app creates
+`skills/<skill-name>/SKILL.md` — one folder per skill, with a markdown
+file describing it. That's correct for skills. Hook submission is now
+doing the same thing (likely because it reuses shared submission logic),
+producing:
 
-*The Plugin detail page (`/plugins/onboarding-context-pack`) and the Skill detail page (`/skills/mini`) should feel like the same design system, but they diverge significantly in the Install and Versions areas:*
+  hooks/<long-slugified-description>/HOOK.md
+  hooks/<long-slugified-description>/hooks.json
 
-*- The Skill page's Install tab has a rich "Installation Pipeline" diagram (SkillHub Server → Download → `~/.claude/skills/`), a "Quick Install" section with a direct download button + numbered CLI steps, and a separate "Copy & Paste Install" section with a "Copy Skill Content" button and manual steps.*
-*- The Plugin page's "How to Use" tab only has a plain numbered text list (extract zip, open terminal, run `/plugin`, choose install from local path) — no pipeline visual, no direct download button, no copy-paste option, and it's under a differently-named tab ("How to Use" vs "Install").*
+This is wrong. There should be no per-hook subfolder and no HOOK.md —
+hook definitions belong directly in a single hooks.json (matcher +
+command entries), matching the standard Claude Code plugin hooks
+structure (a flat `hooks/hooks.json` at the plugin root, not nested
+per-hook folders with their own doc file).
 
-*Audit both detail-page components/routes and bring the Plugin page's Install experience up to parity with the Skill page's: same tab naming and order where it makes sense, the same installation-pipeline visual (adapted for a plugin's actual install path, e.g. into a plugins directory or via `/plugin install`), a one-click download of the plugin package, and a copy-paste fallback if applicable to plugins. Also check the stat row and remaining subtabs (Overview, Versions, and Skill's "Full Skill"/"Reviews" vs Plugin's "Members") for other inconsistencies worth resolving so both detail pages share one consistent layout and interaction pattern, adjusting only what's genuinely equivalent between a skill and a plugin (a plugin bundling multiple skills/hooks may legitimately need extra sections like "Members").*
+Please:
+1. Find the code path that packages a submitted hook into the plugin's
+   file structure, and confirm it's sharing logic with the skill
+   packaging path (the one that creates `skills/<name>/SKILL.md`).
+2. Identify exactly where it's (a) generating a folder name from the
+   hook's description text, and (b) writing a HOOK.md file — these
+   should not happen for hooks.
+3. Fix it so a submitted hook is written into a single hooks.json
+   (creating `hooks/hooks.json` if it doesn't exist yet, or appending/
+   merging the new hook entry into it if it does), with no wrapper
+   folder and no HOOK.md.
+4. Make sure this doesn't break the reference-files feature we just
+   added for hooks — reference files should still attach to the hook
+   submission correctly without needing the now-removed folder as their
+   anchor point. If reference files were relying on that folder to have
+   somewhere to live, tell me and propose where they should live instead
+   (e.g. alongside hooks.json, or wherever skills' references/ directory
+   pattern would map for a flat-file structure).
+5. Update or add tests that submit a hook and assert the resulting file
+   list matches the expected flat structure (no extra folder, no
+   HOOK.md).
+
+Show me the diff, and the before/after file listing for a hook
+submission.
 ----
 
 
