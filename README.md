@@ -1,7 +1,49 @@
 # 📦 Supply Chain RAG Explorer (React Frontend)
 
 -----
+Investigate and fix a "Shell interpolation token" validation error blocking
+legitimate hook submissions.
 
+Context: After deleting a plugin and resubmitting it fresh, submission now
+fails with an error: "Shell interpolation token in 'hoks/hooks.json'."
+(note: the path in the error says "hoks" not "hooks" — could be a typo in
+the error string, or a clue that something is truncating/mangling the
+path before it's reported).
+
+The hooks.json for this plugin contains a hook command using
+${CLAUDE_PROJECT_DIR:-.} — this is a standard, documented variable
+substitution pattern used in Claude Code hook commands, not inherently
+malicious shell injection.
+
+Please:
+1. Search the codebase for the string "Shell interpolation token" to find
+   the validator that's rejecting this submission.
+2. Understand what it's checking for and why — is it a security check
+   meant to block genuinely dangerous patterns (command substitution like
+   $(...), backticks, unescaped pipes into eval, etc.) that's written too
+   broadly and also catches safe ${VAR:-default} style substitution? Or
+   is ${CLAUDE_PROJECT_DIR:-.} specifically supposed to be an allowed
+   exception that isn't being recognized?
+3. Fix the typo in the error message path ("hoks" → "hooks") and, more
+   importantly, find why the reported path is wrong at all — trace
+   whether the validator is reading/reporting the correct file path or
+   whether something upstream is corrupting it.
+4. Determine why this validation didn't block the plugin before deletion
+   — was this hooks.json content unchanged from what was previously
+   approved, meaning the validator is newly triggering on already-valid
+   content (regression from a recent change)? Or is this genuinely new
+   content that was never actually validated before?
+5. Fix the validator so it distinguishes between safe, standard
+   substitution patterns (e.g. ${CLAUDE_PROJECT_DIR:-.} and other
+   documented Claude Code hook variables) and actually dangerous shell
+   interpolation (command substitution, backticks, unescaped injection
+   vectors) — allow the former, keep blocking the latter.
+6. Add tests: one hooks.json using ${CLAUDE_PROJECT_DIR:-.} that should
+   pass validation, and one using something like $(whoami) or backticks
+   that should still be correctly rejected.
+
+Show me the diff, and confirm by resubmitting this exact plugin that it
+now passes.
 ------
 
 
