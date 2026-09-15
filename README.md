@@ -1,49 +1,40 @@
 # 📦 Supply Chain RAG Explorer (React Frontend)
 
 -----
-Investigate and fix a "Shell interpolation token" validation error blocking
-legitimate hook submissions.
+Versioning is still showing on the plugin card for regular users — fix
+this for real this time.
 
-Context: After deleting a plugin and resubmitting it fresh, submission now
-fails with an error: "Shell interpolation token in 'hoks/hooks.json'."
-(note: the path in the error says "hoks" not "hooks" — could be a typo in
-the error string, or a clue that something is truncating/mangling the
-path before it's reported).
-
-The hooks.json for this plugin contains a hook command using
-${CLAUDE_PROJECT_DIR:-.} — this is a standard, documented variable
-substitution pattern used in Claude Code hook commands, not inherently
-malicious shell injection.
+Context: A previous task asked to hide version info (the version number
+next to the plugin name, the "X Versions" stat, and the Versions tab)
+from the plugin card for regular users, keeping it admin-only. It's still
+showing. Since then, the versioning bug itself (SubmitPluginPage.tsx /
+VersionSelector.tsx forcing version bumps) was also worked on, which may
+have touched the same files and undone the hide, or the original hide
+may never have covered every place version info renders.
 
 Please:
-1. Search the codebase for the string "Shell interpolation token" to find
-   the validator that's rejecting this submission.
-2. Understand what it's checking for and why — is it a security check
-   meant to block genuinely dangerous patterns (command substitution like
-   $(...), backticks, unescaped pipes into eval, etc.) that's written too
-   broadly and also catches safe ${VAR:-default} style substitution? Or
-   is ${CLAUDE_PROJECT_DIR:-.} specifically supposed to be an allowed
-   exception that isn't being recognized?
-3. Fix the typo in the error message path ("hoks" → "hooks") and, more
-   importantly, find why the reported path is wrong at all — trace
-   whether the validator is reading/reporting the correct file path or
-   whether something upstream is corrupting it.
-4. Determine why this validation didn't block the plugin before deletion
-   — was this hooks.json content unchanged from what was previously
-   approved, meaning the validator is newly triggering on already-valid
-   content (regression from a recent change)? Or is this genuinely new
-   content that was never actually validated before?
-5. Fix the validator so it distinguishes between safe, standard
-   substitution patterns (e.g. ${CLAUDE_PROJECT_DIR:-.} and other
-   documented Claude Code hook variables) and actually dangerous shell
-   interpolation (command substitution, backticks, unescaped injection
-   vectors) — allow the former, keep blocking the latter.
-6. Add tests: one hooks.json using ${CLAUDE_PROJECT_DIR:-.} that should
-   pass validation, and one using something like $(whoami) or backticks
-   that should still be correctly rejected.
+1. Find every place version info currently renders on the plugin card
+   and detail page for a regular user — check specifically: the version
+   number next to the plugin name (e.g. "v1.0.4"), the version count
+   stat in the stat row, and the "Versions" tab — and anywhere else you
+   find it.
+2. For each one, check git history/blame to see whether it was ever
+   actually hidden and got reintroduced by later changes, or whether the
+   original hide missed it entirely.
+3. Confirm how the app currently distinguishes an admin view from a
+   regular user view elsewhere (reuse that exact pattern — don't
+   introduce a new way of checking role).
+4. Hide all version info from the regular user view using that pattern.
+   Keep it fully visible for admins, since they still need it for review.
+5. Do NOT touch the versioning logic itself (that's tracked separately) —
+   this should be a pure display/visibility fix.
+6. Add a test that specifically checks a regular user's rendered plugin
+   card/detail page contains no version number, version stat, or
+   Versions tab, while an admin's does. This test should have caught the
+   regression last time — make sure it actually would have.
 
-Show me the diff, and confirm by resubmitting this exact plugin that it
-now passes.
+Show me the diff and a screenshot of the plugin card as both a regular
+user and an admin.
 ------
 
 
