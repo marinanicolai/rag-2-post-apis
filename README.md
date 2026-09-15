@@ -1,40 +1,47 @@
 # 📦 Supply Chain RAG Explorer (React Frontend)
 
 -----
-Versioning is still showing on the plugin card for regular users — fix
-this for real this time.
+Add a Feature/Unfeature action to the Plugins admin dashboard, matching
+the Skills admin dashboard, and remove/replace the current delete-style
+action on plugins.
 
-Context: A previous task asked to hide version info (the version number
-next to the plugin name, the "X Versions" stat, and the Versions tab)
-from the plugin card for regular users, keeping it admin-only. It's still
-showing. Since then, the versioning bug itself (SubmitPluginPage.tsx /
-VersionSelector.tsx forcing version bumps) was also worked on, which may
-have touched the same files and undone the hide, or the original hide
-may never have covered every place version info renders.
+Context: In the Skills admin table, each row's Actions column has two
+buttons: a toggle that reads "Feature" or "Unfeature" depending on
+current state, plus "Deprecate". The Plugins admin table currently only
+shows a single action per row (labeled "Deprecate" for published
+plugins, "No actions available" for others) — there's no Feature/
+Unfeature toggle for plugins at all, and the existing action needs to be
+removed.
 
 Please:
-1. Find every place version info currently renders on the plugin card
-   and detail page for a regular user — check specifically: the version
-   number next to the plugin name (e.g. "v1.0.4"), the version count
-   stat in the stat row, and the "Versions" tab — and anywhere else you
-   find it.
-2. For each one, check git history/blame to see whether it was ever
-   actually hidden and got reintroduced by later changes, or whether the
-   original hide missed it entirely.
-3. Confirm how the app currently distinguishes an admin view from a
-   regular user view elsewhere (reuse that exact pattern — don't
-   introduce a new way of checking role).
-4. Hide all version info from the regular user view using that pattern.
-   Keep it fully visible for admins, since they still need it for review.
-5. Do NOT touch the versioning logic itself (that's tracked separately) —
-   this should be a pure display/visibility fix.
-6. Add a test that specifically checks a regular user's rendered plugin
-   card/detail page contains no version number, version stat, or
-   Versions tab, while an admin's does. This test should have caught the
-   regression last time — make sure it actually would have.
+1. Find the Skills admin table's Feature/Unfeature implementation: the
+   button component, what data field it toggles (e.g. a `featured`
+   boolean), how it affects display elsewhere (skills marked "Featured"
+   show a badge on their detail page, per earlier screenshots — e.g. the
+   "mini" skill shows a "Featured" tag).
+2. Find the current Plugins admin table's action button — confirm
+   exactly what it does when clicked (does it actually delete the
+   plugin, or deprecate/unpublish it while keeping the record). Tell me
+   which before changing anything.
+3. Add the same Feature/Unfeature toggle to the Plugins admin table,
+   reusing the skill's component/logic rather than reimplementing it,
+   with an equivalent `featured` field on the plugin model if one
+   doesn't already exist.
+4. Make Feature/Unfeature available for plugins regardless of status
+   (published, draft, rejected, etc.) the same way it's available across
+   skill statuses — or flag if skills actually restrict it to certain
+   statuses only, and match that instead.
+5. Remove the current single delete-style action, unless step 2 reveals
+   it's actually the same "Deprecate" action skills also have — in that
+   case, keep Deprecate and add Feature/Unfeature alongside it (two
+   buttons per row, exactly like skills), rather than removing it.
+6. Make sure a plugin's "Featured" state surfaces the same way a
+   skill's does — e.g. a "Featured" badge on the plugin card/detail page.
+7. Add a test: toggling Feature/Unfeature on a plugin updates its state
+   and the admin table reflects it immediately, mirroring an existing
+   test for skills if one exists.
 
-Show me the diff and a screenshot of the plugin card as both a regular
-user and an admin.
+
 ------
 
 
