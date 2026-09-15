@@ -1,55 +1,7 @@
 # 📦 Supply Chain RAG Explorer (React Frontend)
 
 -----
-Fix the plugin versioning bug at its actual root cause: SubmitPluginPage.tsx
-and VersionSelector.tsx force a version bump on every save.
 
-Context: Previous fixes only touched the display and the backend's
-acceptance of in-place resubmission — they did NOT touch the form. As a
-result, using "Edit & Resubmit" (changes-requested flow) or restarting
-after rejection through the form still creates a new stacked version row
-every time, because the form itself always bumps the version number on
-save. The underlying "Resubmit same content, same version" capability was
-never actually wired into the UI that triggers it.
-
-Please:
-1. Read SubmitPluginPage.tsx and VersionSelector.tsx and confirm exactly
-   where/how a new version number gets generated on every save — is it
-   auto-incremented unconditionally in the submit handler, computed in
-   VersionSelector regardless of context, or something else.
-2. Compare this against how skills handle the equivalent flow (edit +
-   resubmit after rejection) — skills apparently don't have this bug, so
-   use their submit flow as the reference implementation for what
-   "correct" looks like.
-3. Implement one of these two fixes — pick based on what you find, and
-   tell me which you chose and why:
-   (a) Minimal fix: make the form support a genuine "resubmit same
-       content, same version" mode, so "Edit & Resubmit" after a
-       changes-requested or rejected review updates the existing version
-       row in place instead of always incrementing, while a deliberate
-       new version (the user actually changing functionality/bumping
-       semver themselves) still creates a new row.
-   (b) Structural fix: split plugins into a review-attempt table
-       (tracks each submission attempt, rejections, feedback) separate
-       from a published-version table (tracks only actually-published
-       versions) — mirroring exactly how skills are structured. This is
-       the more durable fix if skills already use this pattern.
-4. Whichever you pick, make sure "Submit for Review" appears only on the
-   single current actionable entry, with no stacked Draft/Rejected rows
-   accumulating from repeated resubmission of unchanged or lightly-edited
-   content.
-5. Add a regression test that specifically exercises the "Edit &
-   Resubmit" button after a changes-requested review, and after a
-   rejection, and asserts no new version row is created unless the
-   submitter is intentionally publishing a new version.
-6. Run the existing test suite (vitest) and confirm nothing that depends
-   on the old versioning behavior breaks silently.
-
-This is the third attempt at this bug — the first two fixed only display
-and backend acceptance without touching the form that actually causes the
-bump. Do not repeat that pattern: verify your fix by actually clicking
-through "Edit & Resubmit" in the affected flow, not just checking that
-data displays correctly after the fact.
 ------
 
 
