@@ -1,37 +1,55 @@
 # 📦 Supply Chain RAG Explorer (React Frontend)
 
 -----
-Remove the version information from the plugin card as shown to regular
-users, without deleting the underlying version data or admin
-functionality.
+Fix the plugin versioning bug at its actual root cause: SubmitPluginPage.tsx
+and VersionSelector.tsx force a version bump on every save.
 
-Context: The plugin's versioning logic still has an unresolved bug
-(stacked Draft/Rejected version entries, "Submit for Review" appearing on
-the wrong version). Rather than continue chasing that fix right now, hide
-version-related UI from the plugin card for regular users so they aren't
-seeing a confusing/incorrect Versions display.
+Context: Previous fixes only touched the display and the backend's
+acceptance of in-place resubmission — they did NOT touch the form. As a
+result, using "Edit & Resubmit" (changes-requested flow) or restarting
+after rejection through the form still creates a new stacked version row
+every time, because the form itself always bumps the version number on
+save. The underlying "Resubmit same content, same version" capability was
+never actually wired into the UI that triggers it.
 
 Please:
-1. Find every place on the plugin card and detail page where version
-   info surfaces for a regular user: the "X Versions" stat in the stat
-   row, the "Versions" tab, the version number next to the plugin name
-   (e.g. "v1.0.4"), and anywhere else it appears.
-2. Hide all of that from the regular user view.
-3. Confirm whether admins still need version info to do plugin review
-   (they likely do, to see submission history and act on Draft/Rejected
-   versions) — if so, keep the Versions tab and stat visible in the
-   admin view only, and tell me where that admin/user distinction is
-   made elsewhere in the app so this follows the same pattern.
-4. Do not change or touch the underlying version data model, submission
-   flow, or the versioning bug itself — this is a display-only change.
-   Leave a comment or note in the code marking this as a temporary hide
-   pending the real versioning fix.
-5. Add/update a test confirming a regular user's view of a plugin card
-   has no version stat or tab, while an admin's view still does (if
-   admins keep it).
+1. Read SubmitPluginPage.tsx and VersionSelector.tsx and confirm exactly
+   where/how a new version number gets generated on every save — is it
+   auto-incremented unconditionally in the submit handler, computed in
+   VersionSelector regardless of context, or something else.
+2. Compare this against how skills handle the equivalent flow (edit +
+   resubmit after rejection) — skills apparently don't have this bug, so
+   use their submit flow as the reference implementation for what
+   "correct" looks like.
+3. Implement one of these two fixes — pick based on what you find, and
+   tell me which you chose and why:
+   (a) Minimal fix: make the form support a genuine "resubmit same
+       content, same version" mode, so "Edit & Resubmit" after a
+       changes-requested or rejected review updates the existing version
+       row in place instead of always incrementing, while a deliberate
+       new version (the user actually changing functionality/bumping
+       semver themselves) still creates a new row.
+   (b) Structural fix: split plugins into a review-attempt table
+       (tracks each submission attempt, rejections, feedback) separate
+       from a published-version table (tracks only actually-published
+       versions) — mirroring exactly how skills are structured. This is
+       the more durable fix if skills already use this pattern.
+4. Whichever you pick, make sure "Submit for Review" appears only on the
+   single current actionable entry, with no stacked Draft/Rejected rows
+   accumulating from repeated resubmission of unchanged or lightly-edited
+   content.
+5. Add a regression test that specifically exercises the "Edit &
+   Resubmit" button after a changes-requested review, and after a
+   rejection, and asserts no new version row is created unless the
+   submitter is intentionally publishing a new version.
+6. Run the existing test suite (vitest) and confirm nothing that depends
+   on the old versioning behavior breaks silently.
 
-Show me the diff and a screenshot of the plugin card as a regular user
-would now see it.
+This is the third attempt at this bug — the first two fixed only display
+and backend acceptance without touching the form that actually causes the
+bump. Do not repeat that pattern: verify your fix by actually clicking
+through "Edit & Resubmit" in the affected flow, not just checking that
+data displays correctly after the fact.
 ------
 
 
