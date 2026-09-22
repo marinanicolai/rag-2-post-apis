@@ -1,7 +1,24 @@
 # 📦 Supply Chain RAG Explorer (React Frontend)
 
 ---
-P
+Edit the existing Figma pages only. Do not create new pages.
+
+In the top navigation bar of the **Contributors** and **Help & Support** pages, remove the two tabs/links:
+
+* Chat
+* About
+
+These two navigation items are not needed on these pages.
+
+Keep the rest of the existing top bar exactly as it is.
+
+Do not redesign the header.
+Do not remove the logo, project name, existing styling, spacing, or other required navigation elements.
+
+After removing **Chat** and **About**, adjust the spacing/alignment so the top bar still looks clean and consistent with the other pages in the application.
+
+Make this change only to the existing Contributors and Help & Support frames.
+
 ---
 
 ## 🧠 RAG System Architecture
