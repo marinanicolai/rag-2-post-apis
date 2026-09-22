@@ -1,4 +1,140 @@
 # 📦 Supply Chain RAG Explorer (React Frontend)
+Use the existing Figma design as the source of truth.
+
+Create two new pages/frames:
+
+1. Contributors
+2. Help & Support
+
+IMPORTANT: Before creating anything, inspect the existing Figma pages and reuse the existing application's:
+
+* page layout
+* header and navigation
+* typography
+* colors
+* spacing
+* cards
+* buttons
+* icons
+* borders
+* components
+* design tokens
+
+Do NOT introduce a new visual style. These pages should look like they were originally designed as part of the existing application.
+
+## Microsoft Teams / Microsoft 365 profile photos
+
+For every person displayed on the Contributors or Help & Support pages, retrieve their existing Microsoft 365 / Teams profile photo using Microsoft Graph.
+
+Use the person's company email address / userPrincipalName to identify the correct Microsoft 365 account.
+
+Use the Microsoft Graph profile photo endpoint:
+
+GET https://graph.microsoft.com/v1.0/users/{userPrincipalName}/photo/$value
+
+Use the appropriate authenticated Microsoft Graph credentials already available in the development environment.
+
+Do not scrape profile photos from the Teams UI.
+
+Do not use random or generated profile images.
+
+If Microsoft Graph returns a profile photo, use that photo in the person's contributor/contact card.
+
+If the person does not have a profile photo or Microsoft Graph returns 404, use the existing application's default avatar treatment or an initials-based avatar.
+
+Do not fail the entire page because one contributor does not have a photo.
+
+Keep profile images visually consistent:
+
+* same dimensions
+* same crop
+* same border radius
+* same spacing
+* same styling as existing user/avatar components in the application
+
+If the existing Figma design already has an Avatar or User component, reuse it.
+
+## Contributors page
+
+Create a Contributors page containing:
+
+* Project name
+* Project start date
+* Short project description
+
+Then add a section called:
+
+### Project Contributors
+
+For each contributor display:
+
+* Microsoft Teams / Microsoft 365 profile photo
+* Full name
+* Role
+* Contact information
+* Short description of their contribution, when available
+
+Example:
+
+[Profile Photo]
+
+Marina Nicolai
+Software Developer
+[company email]
+
+Contribution:
+Application development and project implementation.
+
+Use reusable contributor cards/components so additional team members can easily be added later.
+
+## Help & Support page
+
+Create a Help & Support page using the same existing application design.
+
+At the top display:
+
+"Need help? Find the appropriate contact below."
+
+Create contact sections for:
+
+* General questions
+* Technical/application issues
+* Access or login issues
+* Data/content questions
+* Feature requests or feedback
+
+For each contact display:
+
+* Microsoft Teams / Microsoft 365 profile photo
+* Name
+* Role
+* Contact information
+* Short explanation of when that person should be contacted
+
+Also create a clearly visible:
+
+### Primary Project Contact
+
+Display:
+
+[Microsoft Teams Profile Photo]
+
+Marina Nicolai
+Software Developer
+[company email]
+
+Reuse the same contributor/contact component whenever possible.
+
+## Important implementation rules
+
+1. Inspect the existing Figma file before designing anything.
+2. Reuse existing Figma components whenever possible.
+3. Extend the existing design system — do not redesign the application.
+4. Use Microsoft Graph for Microsoft 365/Teams profile photos.
+5. Match people using their company email/userPrincipalName, not just their display name.
+6. Use the application's existing fallback avatar if no Microsoft profile photo exists.
+7. Do not expose Microsoft Graph access tokens, secrets, or credentials in Figma or in the UI.
+8. Keep the new Contributors and Help pages completely consistent with the other existing pages.
 
 -----
 Add a Feature/Unfeature action to the Plugins admin dashboard, matching
