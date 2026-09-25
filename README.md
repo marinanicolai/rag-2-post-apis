@@ -3,7 +3,32 @@
 ---
 Start
 ----
+ix(hook): environment variables can no longer weaken the policy
+DLP_ENFORCEMENT, DLP_FAIL_MODE and DLP_RESTRICTIONS_DIR were read from the
+process environment, which is the shell of the person the policy applies to.
+Verified end to end on a document marked above the ceiling: exit 2 and a block
+with no variable set, exit 0 and an advisory message with DLP_ENFORCEMENT=shadow.
+No administrator rights and no file edit were needed.
 
+An environment value is now honoured only when it is at least as strict as the
+pack's own setting. Tightening still works, so an operator can harden a machine
+without republishing the pack, while shadow and open are ignored when the pack
+asks for enforce and closed. A rejected value is not silent: it is written to
+the decision record as env_ignored, so an attempt to loosen the policy shows up
+in the audit trail rather than disappearing.
+
+DLP_RESTRICTIONS_DIR now ranks below the managed directory instead of above it.
+Where an administrator has published a pack, that pack is the policy and the
+variable cannot redirect the hook at a permissive copy. Where no managed pack
+exists the variable still works, so development and testing a candidate pack
+are unaffected.
+
+How to verify:
+
+    DLP_ENFORCEMENT=shadow python client/hook.py PreToolUse < payload.json
+
+still exits 2 against a pack published with enforcement: enforce, and the
+decision log records env_ignored=["DLP_ENFORCEMENT=shadow (weaker than enforce)"].
 
 ---
 End
