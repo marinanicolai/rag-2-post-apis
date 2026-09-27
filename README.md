@@ -3,7 +3,12 @@
 ---
 Start
 ----
+test: expect env vars to be ignored instead of weakening the policy
 
+test_shadow_mode_logs_but_allows checked that DLP_ENFORCEMENT=shadow
+lets content through, which is the bypass fixed in 399b9f4. Replaced
+with a test that the variable is ignored and recorded in env_ignored.
+Shadow mode stays covered by test_shadow_mode_from_manifest.
 ---
 End
 ----
