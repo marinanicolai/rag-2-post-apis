@@ -4,22 +4,13 @@
 Start
 ----
 ```
-      "uninspectable-files": {
-        "dictionary": "Unscannable file type",
-        "source": "built-in",
-        "build": "Block images and Office files with no extractable text.",
-        "notes": "Screenshots and encrypted or password-protected Office files. The pack denies these too.",
-    },
-    "uninspectable-other": {
-        "dictionary": "Unscannable file type",
-        "source": "built-in",
-        "build": "Log only; do not block.",
-        "notes": "Scanned PDFs, archives and unknown binaries. The pack logs these while the false-positive rate is measured; keep the same posture.",
-    },
+    git add restrictions\uninspectable-files.md restrictions\uninspectable-other.md restrictions\tests.yaml scripts\proxy_selftest.py scripts\zscaler_spec.py tests\test_client_hook.py tests\test_client_proxy.py tests\test_zscaler_spec.py docs\risks.yaml docs\ZSCALER_RULE_SPEC.md docs\ZSCALER_RULE_SPEC.docx docs\RISK_REGISTER.md docs\RISK_REGISTER.docx docs\RISK_REGISTER.xlsx docs\evidence\risk-evidence.json
 ```
 
 ```
-    assert "uninspectable-other" in logged, "the pack logs other unreadable files rather than denying them"
+    git status --short
+git commit -m "Deny uninspectable images and Office files; log other unreadable files (uninspectable-other)"
+git push
 ```
 ```
 
