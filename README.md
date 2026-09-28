@@ -4,28 +4,30 @@
 Start
 ----
 ```
-    description: >
-      Office documents and PDFs whose text carries no recognized marking are
-      denied by classification-label-required (scoped by media type; code and
-      plain text are not checked). Images and Office files the hook cannot read
-      (screenshots, encrypted or password-protected documents) are denied by
-      uninspectable-files. Other unreadable files (scanned PDFs, archives,
-      unknown binaries) are only logged under uninspectable-other while the
-      false-positive rate is measured.
-    rules: [classification-label-required, uninspectable-files, uninspectable-other]
-    evidence:
-      hooks:
-        - {type: fixture, kind: png, expect: deny, rule: uninspectable-files}
-        - {type: fixture, kind: docx_unlabeled, expect: deny, rule: classification-label-required}
-```
-Select-String -Path tests\*.py,client\*.py,scripts\*.py -Pattern "expect_rule\s*=" -Context 2,2
+      "uninspectable-files": {
+        "dictionary": "Unscannable file type",
+        "source": "built-in",
+        "build": "Block images and Office files with no extractable text.",
+        "notes": "Screenshots and encrypted or password-protected Office files. The pack denies these too.",
+    },
+    "uninspectable-other": {
+        "dictionary": "Unscannable file type",
+        "source": "built-in",
+        "build": "Log only; do not block.",
+        "notes": "Scanned PDFs, archives and unknown binaries. The pack logs these while the false-positive rate is measured; keep the same posture.",
+    },
 ```
 
 ```
+    assert "uninspectable-other" in logged, "the pack logs other unreadable files rather than denying them"
+```
+```
 
 
-cls
-Select-String -Path scripts\zscaler_spec.py,tests\test_zscaler_spec.py -Pattern "uninspectable" -Context 2,4```
+python scripts\zscaler_spec.py
+python scripts\risk_register.py
+python -m pytest tests -q
+```
 ---
 End
 ----
