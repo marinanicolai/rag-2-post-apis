@@ -4,7 +4,7 @@
 Start
 ----
 ```
-Get-ChildItem -Recurse -Filter PACK.md | Where-Object { $_.FullName -notmatch '\\\.git\\' } | Select-Object FullName
+"text": "INTERNAL FR\nQ2 revenue grew 14% quarter over quarter, driven by the new licensing program..."}
 ```
 ```
 Select-String -Path restrictions\PACK.md -Pattern "ladder|ceiling" -Context 0,10
