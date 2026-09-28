@@ -4,7 +4,7 @@
 Start
 ----
 
-def _deadline_seconds() -> float:
+       def _deadline_seconds() -> float:
     """The hook's own budget. The environment may shorten it, never extend it."""
     raw = os.environ.get("DLP_HOOK_DEADLINE", "").strip()
     try:
