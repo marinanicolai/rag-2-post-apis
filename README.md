@@ -4,28 +4,17 @@
 Start
 ----
 ```
-        if self.require_marking:
-            # Only report "unmarked" in this mode. Returning the ceiling matches
-            # here too would log every over-marked file under this rule as well.
-            return self._missing_marking(segment)
-        return out
-
-    def _missing_marking(self, segment: Segment) -> list[Match]:
-        """One match when this attachment carries no marking from the ladder."""
-        if segment.kind != "attachment":
-            # A typed prompt is not a document; requiring a banner would deny every question.
-            return []
-        if not segment.inspected:
-            # We could not read it, so we cannot say whether it is marked.
-            # uninspectable-files owns that case.
-            return []
-        if self.media_type_prefixes:
-            media = (segment.media_type or "").lower()
-            if not any(media.startswith(p) for p in self.media_type_prefixes):
-                return []
-        if self.ladder.highest(segment.text) is not None:
-            return []
-        return [Match(segment.file_name or "attachment", "unmarked", 0, 0)]
+    prefixes = spec.get("media_type_prefixes") or []
+    if isinstance(prefixes, str):
+        prefixes = [prefixes]
+    if not isinstance(prefixes, (list, tuple)):
+        raise RuleConfigError("classification detector: 'media_type_prefixes' must be a list of strings")
+    return ClassificationDetector(
+        ladder,
+        ladder.get(ceiling_name),
+        require_marking=bool(spec.get("require_marking", False)),
+        media_type_prefixes=tuple(str(x).strip().lower() for x in prefixes if str(x).strip()),
+    )     
 ```
 ```
 git commit -m "fix(audit): a user cannot redirect the audit log where an admin pack is published"
