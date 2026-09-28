@@ -4,11 +4,31 @@
 Start
 ----
 ```
-git add restrictions\classification-label-required.md samples\clean.json docs\risks.yaml tests\test_risk_register.py docs\ZSCALER_RULE_SPEC.md docs\ZSCALER_RULE_SPEC.docx docs\RISK_REGISTER.md docs\RISK_REGISTER.docx docs\RISK_REGISTER.xlsx docs\evidence\risk-evidence.json```
+ quick update on the DLP hooks work. Everything is on my branch `marina-dev` in data-loss-protection-toolkit (pushed, tests green, pack validates 28/28). No merge request yet; I wanted your input on a few decisions first.
+
+Where it stands against your requirements:
+1. Unmarked files: Office and PDF attachments with no recognized marking are now blocked (classification-label-required is enabled, using the PACK.md ladder instead of the old regex placeholder).
+2. Files above INTERNAL FR: blocked by classification-ceiling (unchanged).
+3. Classified text: detected in prompts and file text where the marking is present.
+4. Prompts and pre-tool calls: both covered, including @ mentions with spaces in the file name and Bash commands that read files.
+5. Blocks outright with an explanation message.
+6. Audit log: working, and DLP_AUDIT_LOG can't override an admin policy.
+
+I also fixed some hardening issues along the way: garbled input and timeouts now block instead of allowing, env variables can no longer weaken the policy, and file types no longer depend on the Windows registry (Excel was making .csv look like an Office file).
+
+Decisions I need from you:
+- PUBLIC has no marking in the ladder, so a public PDF or Word doc is currently blocked as unmarked. How should public documents be marked, or should PUBLIC get a marking?
+- Should "unmarked files" cover documents only (Office and PDF, current scope), or also CSV, code and plain text?
+- Files the hook can't read (images, scanned PDFs, encrypted files) are currently logged, not blocked. Do you want them blocked?
+
+ Happy to walk you through it on a quick call if that's easier, let me know
+
+
 ```
-Add-Content .gitignore "hash.salt"
-```
-python scripts\risk_register.py --help
+
+
+
+
 ```
 
 ```
