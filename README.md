@@ -4,7 +4,7 @@
 Start
 ----
 
-$env:DLP_HOOK_DEADLINE="0.01"; '{"hook_event_name":"UserPromptSubmit","prompt":"hello"}' | python client/hook.py UserPromptSubmit; echo "exit code: $LASTEXITCODE"
+'{"hook_event_name":"UserPromptSubmit","prompt":"hello"}' | python client/hook.py UserPromptSubmit; echo "exit code: $LASTEXITCODE"
 
 
 ---
