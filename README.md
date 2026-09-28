@@ -4,15 +4,23 @@
 Start
 ----
 ```
-  python -c "from pathlib import Path; from client.wire import Inspector; i = Inspector(Path('no-pack-here'), audit_log='NUL'); print(repr(i.fail_mode), i.env_ignored)"
+$env:DLP_FAIL_MODE="open"; python -c "from pathlib import Path; from client.wire import Inspector; i = Inspector(Path('no-pack-here'), audit_log='NUL'); print(repr(i.fail_mode), i.env_ignored)"; Remove-Item Env:DLP_FAIL_MODE
 ```
 ```
-Select-String -Path client\wire.py -Pattern "default_fail|FAIL_MODES|env_ignored" -Context 0,1
+Select-String -Path client\wire.py -Pattern "def _env_choice" -Context 0,15
 ```
 
 ```
 python -c "from client.files import inspect_file; fc = inspect_file('C:/temp/fake.docx'); print(fc.extractor, fc.inspected)"
+
+
 ```
+
+```
+git diff --stat
+```
+
+
 test
 
 ```
