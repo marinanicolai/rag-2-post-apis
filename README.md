@@ -4,28 +4,14 @@
 Start
 ----
 
-def _redacted_output(original: Any, rule_id: str | None, reference_id: str) -> Any:
-    """A stand-in for a denied tool result, shaped like the original.
-
-    Bash returns an object with stdout and stderr; most other tools return a
-    string. Keeping the shape means the model reads the placeholder as the result.
-    """
-    note = (
-        f"[removed by inference-hook-dlp: the output matched {rule_id or 'a restriction'}. "
-        f"Reference {reference_id}.]"
-    )
-    if isinstance(original, Mapping):
-        replaced = dict(original)
-        if "stdout" in replaced:
-            replaced["stdout"] = note
-        if "stderr" in replaced:
-            replaced["stderr"] = ""
-        if "content" in replaced:
-            replaced["content"] = note
-        if "stdout" not in replaced and "content" not in replaced:
-            replaced = {"stdout": note, "stderr": "", "interrupted": False, "isImage": False}
-        return replaced
-    return note
+    if event == "PostToolUse":
+        # Already executed. Tell Claude not to use it and surface it to the user.
+        return Outcome(0, {
+            "hookSpecificOutput": {"hookEventName": "PostToolUse", "decision": "block", "reason": msg},
+            "systemMessage": f"inference-hook-dlp: {tool} output matched {decision.deny_rule_id} "
+                             f"({'flagged, shadow mode' if enforcement != 'enforce' else 'Claude was told not to use it'}). "
+                             f"Reference {reference_id}.",
+        }, None, rec)
 
 
 ---
