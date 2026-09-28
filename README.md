@@ -4,14 +4,14 @@
 Start
 ----
 ```
-$env:DLP_FAIL_MODE="open"; python -c "from pathlib import Path; from client.wire import Inspector; i = Inspector(Path('no-pack-here'), audit_log='NUL'); print(repr(i.fail_mode), i.env_ignored)"; Remove-Item Env:DLP_FAIL_MODE
+Select-String -Path . -Pattern "classification-label-required" -Recurse -List | Select-Object Path
 ```
 ```
-Select-String -Path client\wire.py -Pattern "def _env_choice" -Context 0,15
+Get-ChildItem -Recurse -File -Exclude *.pyc | Select-String -Pattern "classification-label-required" -List | Select-Object Path
 ```
 
 ```
-python -c "from client.files import inspect_file; fc = inspect_file('C:/temp/fake.docx'); print(fc.extractor, fc.inspected)"
+Select-String -Path <pack-file> -Pattern "classification-label-required" -Context 2,20
 
 
 ```
