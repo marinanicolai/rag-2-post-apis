@@ -4,8 +4,8 @@
 Start
 ----
 ```
-python -c "import mimetypes; print(mimetypes.MimeTypes().guess_type('data.csv'), mimetypes.MimeTypes().guess_type('a.docx'))"
-python -m pytest tests -q
+git add client\files.py
+git commit -m "Use built-in MIME table so file types don't depend on the Windows registry"
 ```
 ```
   Get-ChildItem -Recurse -File | Where-Object { $_.FullName -notmatch '\\(\.git|__pycache__)\\' } | Select-String -Pattern "no marking and no sensitivity" -List | Select-Object Path
