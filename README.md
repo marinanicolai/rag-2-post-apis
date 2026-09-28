@@ -3,70 +3,61 @@
 ---
 Start
 ----
+1. Make a demo folder with test documents outside the repo
 ```
- quick update on the DLP hooks work. Everything is on my branch `marina-dev` in data-loss-protection-toolkit (pushed, tests green, pack validates 28/28). No merge request yet; I wanted your input on a few decisions first.
-
-Where it stands against your requirements:
-1. Unmarked files: Office and PDF attachments with no recognized marking are now blocked (classification-label-required is enabled, using the PACK.md ladder instead of the old regex placeholder).
-2. Files above INTERNAL FR: blocked by classification-ceiling (unchanged).
-3. Classified text: detected in prompts and file text where the marking is present.
-4. Prompts and pre-tool calls: both covered, including @ mentions with spaces in the file name and Bash commands that read files.
-5. Blocks outright with an explanation message.
-6. Audit log: working, and DLP_AUDIT_LOG can't override an admin policy.
-
-I also fixed some hardening issues along the way: garbled input and timeouts now block instead of allowing, env variables can no longer weaken the policy, and file types no longer depend on the Windows registry (Excel was making .csv look like an Office file).
-
-Decisions I need from you:
-- PUBLIC has no marking in the ladder, so a public PDF or Word doc is currently blocked as unmarked. How should public documents be marked, or should PUBLIC get a marking?
-- Should "unmarked files" cover documents only (Office and PDF, current scope), or also CSV, code and plain text?
-- Files the hook can't read (images, scanned PDFs, encrypted files) are currently logged, not blocked. Do you want them blocked?
-
- Happy to walk you through it on a quick call if that's easier, let me know
-
+New-Item -ItemType Directory -Force C:\temp\dlp-demo | Out-Null
+python -c "from docx import Document; d=Document(); d.add_paragraph('Agenda for Tuesday: budget review, staffing.'); d.save(r'C:\temp\dlp-demo\unmarked.docx'); d=Document(); d.add_paragraph('INTERNAL FR'); d.add_paragraph('Agenda for Tuesday: budget review, staffing.'); d.save(r'C:\temp\dlp-demo\internal.docx'); d=Document(); d.add_paragraph('RESTRICTED FR'); d.add_paragraph('Draft notes for the demo.'); d.save(r'C:\temp\dlp-demo\restricted.docx')"
+Copy-Item samples\files\restricted_fr_memo.txt C:\temp\dlp-demo\
+Get-ChildItem C:\temp\dlp-demo
 
 ```
+During the meeting
 
-
-
-
+Part 1: it's all green (2 minutes)
 ```
-
-```
-git diff --stat
-```
-```
-
-python scripts\zscaler_spec.py
+git log --oneline -12
+python scripts\validate_pack.py
 python -m pytest tests -q
-```
+
+
 
 ```
-git status --short
+Part 2: map tests to his requirements (5 minutes). -v prints each test by name, which reads well on a shared screen:
+```
+python -m pytest tests\test_client_hook.py -v
+python -m pytest tests\test_client_proxy.py -v  
+```
+Then show the risk register. It's the one-page summary of what's covered:
+
 ```
 
-test
+python scripts\risk_register.py --skip-pytest
 
 ```
-        fc.text.strip()
-    )
-
-    # Any of these means the text in hand is not the file's text. The strings
-    # fallback matters most: it pulls readable runs out of any binary, so a
-    # password-protected .docx used to arrive looking successfully inspected.
-    # A document extractor that returned nothing counts too, which covers a PDF
-    # with no text layer. PDF extractors are named "pdf:pypdf", "pdf:strings"
-    # and "pdf:heuristic", hence the prefix and suffix checks.
-    if (
-        fc.extractor in ("strings", "none")
-        or fc.extractor.endswith(":strings")
-        or fc.error is not None
-        or fc.truncated
-        or (fc.extractor.startswith(("office", "pdf")) and not fc.has_text)
-    ):
-        fc.inspected = False
-
-    return fc
+Part 3: live in Claude Code (10 minutes). Open a terminal in the demo folder and start Claude Code:
 ```
+cd C:\temp\dlp-demo
+claude
+```
+Prompt in Claude Code	Expected	Requirement
+```
+summarize @unmarked.docx	Blocked
+
+```
+"does not appear to carry a classification marking"	#1
+summarize @internal.docx	
+```
+Allowed	#1 and #2 (control)
+```
+summarize @restricted.docx	
+```
+Blocked by the ceiling rule	#2
+```
+Paste a line starting RESTRICTED FR and ask to rephrase it	Blocked on the prompt
+```
+#3, #4
+run: type restricted_fr_memo.txt	Blocked before Bash runs	#4 (pre-tool call)
+
 ---
 End
 ----
