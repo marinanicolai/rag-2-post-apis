@@ -4,7 +4,7 @@
 Start
 ----
 ```
-   python -c "import os; os.environ['DLP_AUDIT_LOG']='NUL'; from client.audit import resolve_log_path; print(resolve_log_path(None))"
+      python -c "import os, pathlib, tempfile, client.pack as p; d = pathlib.Path(tempfile.mkdtemp()); (d / 'restrictions').mkdir(); p.managed_dir = lambda: d; os.environ['DLP_AUDIT_LOG']='NUL'; from client.audit import resolve_log_path; print(resolve_log_path(None))"
 ```
 
 ```
