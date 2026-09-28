@@ -4,7 +4,18 @@
 Start
 ----
 ```
-Select-String -Path docs\risks.yaml -Pattern "docx_unlabeled" -Context 12,8```
+    description: >
+      Office documents and PDFs whose text carries no recognized marking are
+      denied by classification-label-required (scoped by media type; code and
+      plain text are not checked). Files the hook cannot read (images, scans,
+      encrypted archives) are only logged under uninspectable-files, so that
+      blind spot is measurable; blocking them is a policy decision for the
+      owner of the pack.
+    rules: [classification-label-required, uninspectable-files]
+    evidence:
+      hooks:
+        - {type: fixture, kind: png, expect: allow, matched: uninspectable-files}
+        - {type: fixture, kind: docx_unlabeled, expect: deny, rule: classification-label-required}
 ```
   Get-ChildItem -Recurse -File | Where-Object { $_.FullName -notmatch '\\(\.git|__pycache__)\\' } | Select-String -Pattern "no marking and no sensitivity" -List | Select-Object Path
 ```
