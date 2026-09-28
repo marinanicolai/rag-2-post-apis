@@ -4,39 +4,7 @@
 Start
 ----
 
-       def _deadline_seconds() -> float:
-    """The hook's own budget. The environment may shorten it, never extend it."""
-    raw = os.environ.get("DLP_HOOK_DEADLINE", "").strip()
-    try:
-        asked = float(raw) if raw else HOOK_DEADLINE_S
-    except ValueError:
-        return HOOK_DEADLINE_S
-    return min(asked, HOOK_DEADLINE_S) if asked > 0 else HOOK_DEADLINE_S
-
-
-def _arm_deadline(event: str) -> None:
-    """Block the action ourselves if the check outlasts our budget.
-
-    A timer thread because signal.alarm does not exist on Windows. os._exit answers
-    immediately, before Claude Code stops waiting.
-    """
-    if event not in BLOCKING_EVENTS:
-        return
-
-    seconds = _deadline_seconds()
-
-    def fire() -> None:
-        sys.stderr.write(
-            "Claude usage restrictions check did not finish within "
-            f"{seconds:.0f}s; action blocked (fail mode closed).\n"
-        )
-        sys.stderr.flush()
-        os._exit(2)
-
-    timer = threading.Timer(seconds, fire)
-    timer.daemon = True
-    timer.start()
-
+$env:DLP_HOOK_DEADLINE="0.01"; '{"hook_event_name":"UserPromptSubmit","prompt":"hello"}' | python client/hook.py UserPromptSubmit; echo "exit code: $LASTEXITCODE"
 
 
 ---
