@@ -4,8 +4,8 @@
 Start
 ----
 ```
-git add client\files.py
-git commit -m "Use built-in MIME table so file types don't depend on the Windows registry"
+Select-String -Path scripts\risk_register.py -Pattern "classification-ceiling|no marking and no sensitivity" -Context 3,6
+Select-String -Path docs\evidence\risk-evidence.json -Pattern "no marking and no sensitivity" -Context 3,6
 ```
 ```
   Get-ChildItem -Recurse -File | Where-Object { $_.FullName -notmatch '\\(\.git|__pycache__)\\' } | Select-String -Pattern "no marking and no sensitivity" -List | Select-Object Path
