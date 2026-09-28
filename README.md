@@ -4,10 +4,25 @@
 Start
 ----
 ```
-Select-String -Path restrictions\tests.yaml -Pattern "image is logged" -Context 2,8
-Select-String -Path tests\test_client_hook.py -Pattern "def test_read_image_is_allowed" -Context 0,10
-Select-String -Path tests\test_client_proxy.py -Pattern "def test_image_only_is_logged" -Context 0,10
-Get-ChildItem samples -Recurse | Select-String -Pattern "logged not blocked" -List | Select-Object Path
+Get-ChildItem -Recurse -File | Where-Object { $_.FullName -notmatch '\\(\.git|__pycache__)\\' } | Select-String -Pattern "logged not blocked" -List | Select-Object Path
+```
+
+```
+
+  - name: image is blocked (no text to inspect)
+    file: samples/files/screenshot.png
+    expect: deny
+    rules: [uninspectable-files, uninspectable-other]
+
+```
+
+```
+
+
+def test_image_only_is_blocked(inspector: Inspector, cases: list[st.Case]) -> None:
+    v = inspector.inspect(case(cases, "messages: image only").request)
+    assert v.blocked
+    assert v.rule_id == "uninspectable-files"
 ```
 ---
 End
