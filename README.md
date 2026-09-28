@@ -4,31 +4,10 @@
 Start
 ----
 ```
----
-id: uninspectable-other
-severity: low
-action: allow_log
-applies_to: [file]
-detector:
-  type: attachment
-  media_type_prefixes: [""]
----
-
-# Other files the hook could not read (logged only)
-
-Scanned PDFs with no text layer, archives, and unknown binary files yield no
-text, so the classification and PII rules cannot see inside them. This rule
-records each one in the decision log so the blind spot can be sized before
-deciding whether to block them.
-
-It matches every unreadable file, including the images and Office files that
-`uninspectable-files` denies; any deny wins, so for those this rule only adds
-a log entry.
-
-## Message to user
-
-{file} could not be inspected (no readable text). It was allowed and logged.
-Reference: {reference_id}
+Select-String -Path restrictions\tests.yaml -Pattern "image is logged" -Context 2,8
+Select-String -Path tests\test_client_hook.py -Pattern "def test_read_image_is_allowed" -Context 0,10
+Select-String -Path tests\test_client_proxy.py -Pattern "def test_image_only_is_logged" -Context 0,10
+Get-ChildItem samples -Recurse | Select-String -Pattern "logged not blocked" -List | Select-Object Path
 ```
 ---
 End
