@@ -10,33 +10,25 @@ Start
 test
 
 ```
-# An unquoted @ mention is not one word. "@Q3 Board Pack.docx" reaches the model,
-# but a scan that stops at the first space sees only "Q3". The only reliable way
-# to tell where the path ends is to ask the filesystem, longest first.
-_MAX_PATH_WORDS = 12
+        fc.text.strip()
+    )
 
+    # Any of these means the text in hand is not the file's text. The strings
+    # fallback matters most: it pulls readable runs out of any binary, so a
+    # password-protected .docx used to arrive looking successfully inspected.
+    # A document extractor that returned nothing counts too, which covers a PDF
+    # with no text layer. PDF extractors are named "pdf:pypdf", "pdf:strings"
+    # and "pdf:heuristic", hence the prefix and suffix checks.
+    if (
+        fc.extractor in ("strings", "none")
+        or fc.extractor.endswith(":strings")
+        or fc.error is not None
+        or fc.truncated
+        or (fc.extractor.startswith(("office", "pdf")) and not fc.has_text)
+    ):
+        fc.inspected = False
 
-def _space_candidates(tail: str) -> list[str]:
-    tail = tail.split("\n", 1)[0].replace("\\ ", " ")
-    words = tail.split(" ")[:_MAX_PATH_WORDS]
-    return [" ".join(words[:n]) for n in range(len(words), 0, -1)]
-
-
-def _prompt_file_refs(prompt: str, cwd: str | None) -> list[str]:
-    out: list[str] = []
-    for m in _AT_REF_RE.finditer(prompt):
-        quoted = m.group(1) or m.group(2)
-        candidates = [quoted] if quoted else _space_candidates(prompt[m.start(3):])
-        for raw in candidates:
-            raw = raw.rstrip(_TRAILING_PUNCT)
-            if not raw:
-                continue
-            path = _resolve(raw, cwd)
-            if os.path.isfile(path):
-                if path not in out:
-                    out.append(path)
-                break
-    return out
+    return fc
 ```
 ---
 End
