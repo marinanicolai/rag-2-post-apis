@@ -4,17 +4,7 @@
 Start
 ----
 ```
-    prefixes = spec.get("media_type_prefixes") or []
-    if isinstance(prefixes, str):
-        prefixes = [prefixes]
-    if not isinstance(prefixes, (list, tuple)):
-        raise RuleConfigError("classification detector: 'media_type_prefixes' must be a list of strings")
-    return ClassificationDetector(
-        ladder,
-        ladder.get(ceiling_name),
-        require_marking=bool(spec.get("require_marking", False)),
-        media_type_prefixes=tuple(str(x).strip().lower() for x in prefixes if str(x).strip()),
-    )     
+    python -c "import client.classification"
 ```
 ```
 git commit -m "fix(audit): a user cannot redirect the audit log where an admin pack is published"
