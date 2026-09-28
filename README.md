@@ -4,7 +4,8 @@
 Start
 ----
 ```
-''{"hook_event_name":"PreToolUse","tool_name":"Read","tool_input":{"file_path":"C:/temp/fake.docx"},"cwd":"C:/temp"}' | python client/hook.py PreToolUse; echo "exit code: $LASTEXITCODE"
+git add app/payload.py client/files.py client/hook.py app/detectors.py scripts/validate_pack.py
+git commit -m "fix(files): mark files that could not really be read as not inspected"
 
 
 ```
