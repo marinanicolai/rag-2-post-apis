@@ -3,7 +3,11 @@
 ---
 Start
 ----
- '{"hook_event_name":"UserPromptSubmit","prompt":"summarise @Q3 Board Pack.txt please","cwd":"C:/temp/dlptest"}' | python client/hook.py UserPromptSubmit; echo "exit code: $LASTEXITCODE"
+```
+'{"hook_event_name":"UserPromptSubmit","prompt":"summarise @Q3 Board Pack.txt please","cwd":"C:/temp/dlptest"}' | python client/hook.py UserPromptSubmit; echo "exit code: $LASTEXITCODE"
+
+```
+test
 
 ```
 # An unquoted @ mention is not one word. "@Q3 Board Pack.docx" reaches the model,
