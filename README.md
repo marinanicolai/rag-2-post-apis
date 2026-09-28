@@ -4,8 +4,7 @@
 Start
 ----
 ```
-Get-Content scripts\proxy_selftest.py | Select-Object -Skip 211 -First 12```
-
+Select-String -Path scripts\proxy_selftest.py -Pattern "image only|uninspectable-files is allow_log" -Context 0,4
 ```
 Select-String -Path tests\*.py,client\*.py,scripts\*.py -Pattern "expect_rule\s*=" -Context 2,2
 ```
