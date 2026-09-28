@@ -4,10 +4,10 @@
 Start
 ----
 ```
-    Select-String -Path client\wire.py -Pattern "pack_error" -Context 4,10
+  python -c "from pathlib import Path; from client.wire import Inspector; i = Inspector(Path('no-pack-here'), audit_log='NUL'); print(repr(i.fail_mode), i.env_ignored)"
 ```
 ```
-git commit -m "fix(audit): a user cannot redirect the audit log where an admin pack is published"
+Select-String -Path client\wire.py -Pattern "default_fail|FAIL_MODES|env_ignored" -Context 0,1
 ```
 
 ```
