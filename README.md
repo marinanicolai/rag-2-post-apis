@@ -4,10 +4,10 @@
 Start
 ----
 ```
- Get-ChildItem docs -Recurse -Include *.docx,*.xlsx | Select-Object FullName
+Select-String -Path .gitignore -Pattern "salt"
 ```
 ```
-python -m pip install -r requirements-reports.txt
+Add-Content .gitignore "hash.salt"
 ```
 python scripts\risk_register.py --help
 ```
