@@ -4,8 +4,7 @@
 Start
 ----
 ```
-Get-ChildItem -Recurse -File | Where-Object { $_.FullName -notmatch '\\(\.git|__pycache__)\\' } | Select-String -Pattern "image only" | Select-Object Path, LineNumber, Line
-```
+Get-Content scripts\proxy_selftest.py | Select-Object -Skip 211 -First 12```
 
 ```
 Select-String -Path tests\*.py,client\*.py,scripts\*.py -Pattern "expect_rule\s*=" -Context 2,2
