@@ -4,9 +4,7 @@
 Start
 ----
 ```
-git add app/payload.py client/files.py client/hook.py app/detectors.py scripts/validate_pack.py
-git commit -m "fix(files): mark files that could not really be read as not inspected"
-
+Select-String -Path client\audit.py -Pattern "DLP_AUDIT_LOG" -Context 5,5
 
 ```
 
