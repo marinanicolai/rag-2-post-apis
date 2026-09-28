@@ -4,7 +4,7 @@
 Start
 ----
 ```
-Get-Content samples\clean.json | Select-Object -Skip 10
+Select-String -Path PACK.md -Pattern "ladder|ceiling" -Context 0,10
 ```
 ```
 Get-ChildItem -Recurse -File -Exclude *.pyc | Select-String -Pattern "classification-label-required" -List | Select-Object Path
