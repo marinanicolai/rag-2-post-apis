@@ -4,8 +4,7 @@
 Start
 ----
 ```
-Select-String -Path scripts\risk_register.py -Pattern "classification-ceiling|no marking and no sensitivity" -Context 3,6
-Select-String -Path docs\evidence\risk-evidence.json -Pattern "no marking and no sensitivity" -Context 3,6
+Get-ChildItem -Recurse -File | Where-Object { $_.FullName -notmatch '\\(\.git|__pycache__)\\' -and $_.FullName -notmatch 'risk-evidence\.json' } | Select-String -Pattern "docx_unlabeled" | Select-Object Path, LineNumber
 ```
 ```
   Get-ChildItem -Recurse -File | Where-Object { $_.FullName -notmatch '\\(\.git|__pycache__)\\' } | Select-String -Pattern "no marking and no sensitivity" -List | Select-Object Path
