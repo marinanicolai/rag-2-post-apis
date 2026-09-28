@@ -4,19 +4,7 @@
 Start
 ----
 ```
-    git add restrictions\uninspectable-files.md restrictions\uninspectable-other.md restrictions\tests.yaml scripts\proxy_selftest.py scripts\zscaler_spec.py tests\test_client_hook.py tests\test_client_proxy.py tests\test_zscaler_spec.py docs\risks.yaml docs\ZSCALER_RULE_SPEC.md docs\ZSCALER_RULE_SPEC.docx docs\RISK_REGISTER.md docs\RISK_REGISTER.docx docs\RISK_REGISTER.xlsx docs\evidence\risk-evidence.json
-```
-
-```
-    git status --short
-git commit -m "Deny uninspectable images and Office files; log other unreadable files (uninspectable-other)"
-git push
-```
-```
-
-
-python scripts\zscaler_spec.py
-python scripts\risk_register.py
+.py
 python -m pytest tests -q
 ```
 ---
