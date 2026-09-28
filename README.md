@@ -4,7 +4,8 @@
 Start
 ----
 ```
-  Select-String -Path tests\test_client_hook.py -Pattern "def test_bash_command_referencing_restricted_file_blocked" -Context 0,25
+  python -c "import mimetypes; print(mimetypes.guess_type('data.csv'))"
+Select-String -Path client\*.py -Pattern "mimetypes" -Context 1,1
 ```
 ```
   Get-ChildItem -Recurse -File | Where-Object { $_.FullName -notmatch '\\(\.git|__pycache__)\\' } | Select-String -Pattern "no marking and no sensitivity" -List | Select-Object Path
