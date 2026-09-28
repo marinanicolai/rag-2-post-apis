@@ -3,10 +3,7 @@
 ---
 Start
 ----
- New-Item -ItemType Directory -Force C:\temp\dlptest | Out-Null
-Set-Content -Path "C:\temp\dlptest\Q3 Board Pack.txt" -Value "RESTRICTED FR`n`nestimates"
-'{"hook_event_name":"UserPromptSubmit","prompt":"summarise @Q3 Board Pack.txt please","cwd":"C:/temp/dlptest"}' | python client/hook.py UserPromptSubmit; echo "exit code: $LASTEXITCODE"
-
+ '{"hook_event_name":"UserPromptSubmit","prompt":"summarise @Q3 Board Pack.txt please","cwd":"C:/temp/dlptest"}' | python client/hook.py UserPromptSubmit; echo "exit code: $LASTEXITCODE"
 
 ---
 End
