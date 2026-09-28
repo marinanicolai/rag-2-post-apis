@@ -4,7 +4,7 @@
 Start
 ----
 ```
-Set-Content -Path C:\temp\fake.docx -Value "not really a word document"
+'{"hook_event_name":"PreToolUse","tool_name":"Read","tool_input":{"file_path":"C:/temp/fake.docx"},"cwd":"C:/temp"}' | python client/hook.py PreToolUse; echo "exit code: $LASTEXITCODE"
 
 
 ```
