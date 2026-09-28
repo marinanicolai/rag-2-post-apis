@@ -4,7 +4,17 @@
 Start
 ----
 ```
-Select-String -Path client\classification.py -Pattern "class ClassificationDetector|def find|return out|def build_classification|return ClassificationDetector" -Context 0,3
+class ClassificationDetector:
+    ladder: Ladder
+    ceiling: Level
+    # With require_marking, a document carrying no recognised marking at all is
+    # a match. The ladder from PACK.md is the authority, so this inherits the
+    # marking list exactly rather than guessing at what a label looks like.
+    require_marking: bool = False
+    # Limits require_marking to the media types expected to carry a banner.
+    # Empty means every attachment, which would also deny a plain note.
+    media_type_prefixes: tuple[str, ...] = ()
+    kind: str = "classification"
 ```
 ```
 git commit -m "fix(audit): a user cannot redirect the audit log where an admin pack is published"
