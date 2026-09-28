@@ -4,7 +4,8 @@
 Start
 ----
 ```
-Get-ChildItem -Recurse -File | Where-Object { $_.FullName -notmatch '\\(\.git|__pycache__)\\' } | Select-String -Pattern "logged not blocked" -List | Select-Object Path
+python scripts\validate_pack.py
+python -m pytest tests\test_client_hook.py tests\test_client_proxy.py -q
 ```
 
 ```
