@@ -4,8 +4,13 @@
 Start
 ----
 ```
-'{"hook_event_name":"UserPromptSubmit","prompt":"summarise @Q3 Board Pack.txt please","cwd":"C:/temp/dlptest"}' | python client/hook.py UserPromptSubmit; echo "exit code: $LASTEXITCODE"
+Set-Content -Path C:\temp\fake.docx -Value "not really a word document"
 
+
+```
+
+```
+python -c "from client.files import inspect_file; fc = inspect_file('C:/temp/fake.docx'); print(fc.extractor, fc.inspected)"
 ```
 test
 
