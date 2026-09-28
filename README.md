@@ -4,8 +4,7 @@
 Start
 ----
 ```
-Select-String -Path client\*.py -Pattern "media_type_prefixes|inspected" -Context 1,3
-Select-String -Path client\*.py -Pattern "allow_log" -Context 2,2
+Select-String -Path app\*.py -Pattern "allow_log|media_type_prefixes" -Context 2,4
 ```
 ---
 End
