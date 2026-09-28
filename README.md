@@ -4,7 +4,34 @@
 Start
 ----
 ```
-Select-String -Path app\*.py -Pattern "allow_log|media_type_prefixes" -Context 2,4
+---
+id: uninspectable-files
+severity: medium
+action: deny
+applies_to: [file]
+detector:
+  type: attachment
+  media_type_prefixes: ["image/", "application/vnd.openxmlformats", "application/vnd.ms-", "application/msword"]
+---
+
+# Images and Office files the hook could not read
+
+Images, and Office documents that yield no text (almost always encrypted or
+password-protected), cannot be checked by the classification and PII rules,
+so they may not be sent to Claude. Screenshots of documents are a realistic
+path for higher-classified material, and an encrypted file is by definition
+something the hook cannot inspect.
+
+The detector only matches files with no extracted text, so readable Office
+documents are handled by the classification and PII rules as usual. Other
+unreadable files (scanned PDFs, archives, unknown binaries) are only logged,
+under `uninspectable-other`, while the false-positive rate is measured.
+
+## Message to user
+
+{file} could not be inspected (no readable text), and files that cannot be
+checked may not be sent to Claude. Convert it to a text-based format or use an
+approved copy. Reference: {reference_id}
 ```
 ---
 End
