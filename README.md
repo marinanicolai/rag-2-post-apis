@@ -5,33 +5,30 @@ Start
 ----
 ```
 ---
-id: uninspectable-files
-severity: medium
-action: deny
+id: uninspectable-other
+severity: low
+action: allow_log
 applies_to: [file]
 detector:
   type: attachment
-  media_type_prefixes: ["image/", "application/vnd.openxmlformats", "application/vnd.ms-", "application/msword"]
+  media_type_prefixes: [""]
 ---
 
-# Images and Office files the hook could not read
+# Other files the hook could not read (logged only)
 
-Images, and Office documents that yield no text (almost always encrypted or
-password-protected), cannot be checked by the classification and PII rules,
-so they may not be sent to Claude. Screenshots of documents are a realistic
-path for higher-classified material, and an encrypted file is by definition
-something the hook cannot inspect.
+Scanned PDFs with no text layer, archives, and unknown binary files yield no
+text, so the classification and PII rules cannot see inside them. This rule
+records each one in the decision log so the blind spot can be sized before
+deciding whether to block them.
 
-The detector only matches files with no extracted text, so readable Office
-documents are handled by the classification and PII rules as usual. Other
-unreadable files (scanned PDFs, archives, unknown binaries) are only logged,
-under `uninspectable-other`, while the false-positive rate is measured.
+It matches every unreadable file, including the images and Office files that
+`uninspectable-files` denies; any deny wins, so for those this rule only adds
+a log entry.
 
 ## Message to user
 
-{file} could not be inspected (no readable text), and files that cannot be
-checked may not be sent to Claude. Convert it to a text-based format or use an
-approved copy. Reference: {reference_id}
+{file} could not be inspected (no readable text). It was allowed and logged.
+Reference: {reference_id}
 ```
 ---
 End
