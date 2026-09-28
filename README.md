@@ -4,8 +4,19 @@
 Start
 ----
 ```
-Select-String -Path scripts\proxy_selftest.py -Pattern "image only|denied by uninspectable" -Context 0,3
-
+    description: >
+      Office documents and PDFs whose text carries no recognized marking are
+      denied by classification-label-required (scoped by media type; code and
+      plain text are not checked). Images and Office files the hook cannot read
+      (screenshots, encrypted or password-protected documents) are denied by
+      uninspectable-files. Other unreadable files (scanned PDFs, archives,
+      unknown binaries) are only logged under uninspectable-other while the
+      false-positive rate is measured.
+    rules: [classification-label-required, uninspectable-files, uninspectable-other]
+    evidence:
+      hooks:
+        - {type: fixture, kind: png, expect: deny, rule: uninspectable-files}
+        - {type: fixture, kind: docx_unlabeled, expect: deny, rule: classification-label-required}
 ```
 Select-String -Path tests\*.py,client\*.py,scripts\*.py -Pattern "expect_rule\s*=" -Context 2,2
 ```
@@ -13,10 +24,7 @@ Select-String -Path tests\*.py,client\*.py,scripts\*.py -Pattern "expect_rule\s*
 ```
 
 
-def test_image_only_is_blocked(inspector: Inspector, cases: list[st.Case]) -> None:
-    v = inspector.inspect(case(cases, "messages: image only").request)
-    assert v.blocked
-    assert v.rule_id == "uninspectable-files"
+python -m pytest tests\test_risk_register.py -q
 ```
 ---
 End
