@@ -4,7 +4,9 @@
 Start
 ----
 ```
-Select-String -Path client\audit.py -Pattern "DLP_AUDIT_LOG" -Context 5,5
+def resolve_log_path(configured: str | None) -> str:
+    path = os.environ.get("DLP_AUDIT_LOG") or configured or os.path.join(default_log_dir(), "client-decisions.jsonl")
+    return os.path.expandvars(os.path.expanduser(path))
 
 ```
 
