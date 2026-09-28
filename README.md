@@ -4,15 +4,13 @@
 Start
 ----
 ```
-Get-ChildItem -Recurse -File | Where-Object { $_.FullName -notmatch '\\(\.git|__pycache__)\\' -and $_.FullName -notmatch 'risk-evidence\.json' } | Select-String -Pattern "docx_unlabeled" | Select-Object Path, LineNumber
-```
+Select-String -Path docs\risks.yaml -Pattern "docx_unlabeled" -Context 12,8```
 ```
   Get-ChildItem -Recurse -File | Where-Object { $_.FullName -notmatch '\\(\.git|__pycache__)\\' } | Select-String -Pattern "no marking and no sensitivity" -List | Select-Object Path
 ```
 
 ```
-Select-String -Path <pack-file> -Pattern "classification-label-required" -Context 2,20
-
+Select-String -Path docs\risks.yaml -Pattern "classification-ceiling" -Context 4,4
 
 ```
 
