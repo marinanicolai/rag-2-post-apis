@@ -7,6 +7,22 @@ Start
 Get-Content restrictions\uninspectable-files.md
 Select-String -Path client\*.py -Pattern "class AttachmentDetector" -Context 0,30
 ```
+
+
+```
+ here are the Skills Marketplace updates:
+
+Accomplishments over last month
+• Skills Marketplace (Skillhub)
+   • Added hooks and a plugin system to the Skillhub
+   • Added a PDF-to-text skill, which helps users convert their PDFs into content they can bring into their systems
+   • Built a DLP (data loss prevention) hook
+
+Planned Activities for month
+• Skills Marketplace (Skillhub)
+   • Extract the shareable portion of the DLP hook and add it as a tool in the Skillhub
+   • Continue adding tools tailored to Board-specific needs (not just generic ones), prioritized based on feedback from office hours
+```
 ---
 End
 ----
