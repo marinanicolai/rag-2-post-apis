@@ -4,9 +4,53 @@
 Start
 ----
 ```
-Get-Content restrictions\classification-ceiling.md -TotalCount 20
-Get-Content restrictions\uninspectable-files.md -TotalCount 20
-Select-String -Path client\classification.py -Pattern "require_marking|media_type_prefixes" -Context 1,1
+---
+id: classification-label-required
+severity: high
+action: deny
+enabled: true
+applies_to: [file]
+detector:
+  type: classification
+  require_marking: true
+  media_type_prefixes: ["application/vnd.openxmlformats", "application/vnd.ms-", "application/msword", "application/pdf"]
+---
+
+# Documents with no classification marking
+
+Word, Excel, PowerPoint and PDF files that carry readable text but show no
+recognized classification marking may not be sent to Claude. The
+`classification-ceiling` rule only catches markings above the approved
+ceiling, so a document with no marking at all would otherwise pass
+silently. This rule closes that gap: every readable document must carry at
+least the organization's lowest recognized marking before it can be sent.
+
+How it works: the rule uses the same `classification` detector as
+`classification-ceiling`, in `require_marking` mode. The list of recognized
+markings comes from the ladder in `PACK.md`, so this rule never spells out
+marking names and cannot drift from the manifest. In this mode the detector
+reports only "unmarked"; markings above the ceiling are still handled by
+`classification-ceiling`.
+
+Scope: only files whose media type starts with one of `media_type_prefixes`
+(Office Open XML, legacy Office, and PDF). Code, plain text and other files
+are not checked by this rule. Files with no extractable text are handled by
+`uninspectable-files`, not here.
+
+Open decisions (pending with the policy owner):
+
+- How public documents that carry no marking should be labeled so they are
+  not blocked as unmarked.
+- Whether "unmarked files" should cover only documents (current scope) or
+  also code and plain text.
+
+## Message to user
+
+{file} does not appear to carry a classification marking. Every document
+sent to Claude must show a recognized classification marking (at minimum,
+the organization's lowest level) before it can be checked. Add the
+appropriate marking to the file, or use an approved, already-labeled copy,
+and try again. Reference: {reference_id}
 ```
 ```
 Get-ChildItem -Recurse -File -Exclude *.pyc | Select-String -Pattern "classification-label-required" -List | Select-Object Path
