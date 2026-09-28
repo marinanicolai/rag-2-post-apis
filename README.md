@@ -3,7 +3,10 @@
 ---
 Start
 ----
- scanned/no-text PDFs stay at allow_log, with tests and the risk register updated. Quick question: what about other unreadable types, like a .zip or an unknown binary? Keep logging those for now?
+ ```
+Get-Content restrictions\uninspectable-files.md
+Select-String -Path client\*.py -Pattern "class AttachmentDetector" -Context 0,30
+```
 ---
 End
 ----
