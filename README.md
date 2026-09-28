@@ -4,7 +4,7 @@
 Start
 ----
 ```
-    python -c "import client.classification"
+    Select-String -Path client\wire.py -Pattern "pack_error" -Context 4,10
 ```
 ```
 git commit -m "fix(audit): a user cannot redirect the audit log where an admin pack is published"
