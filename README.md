@@ -3,15 +3,20 @@
 ---
 Start
 ----
-
     if event == "PostToolUse":
-        # Already executed. Tell Claude not to use it and surface it to the user.
-        return Outcome(0, {
+        # The tool already ran, so this is remediation, not prevention. decision: block
+        # only asks the model not to use what it read; replacing the output removes it.
+        out: dict[str, Any] = {
             "hookSpecificOutput": {"hookEventName": "PostToolUse", "decision": "block", "reason": msg},
             "systemMessage": f"inference-hook-dlp: {tool} output matched {decision.deny_rule_id} "
-                             f"({'flagged, shadow mode' if enforcement != 'enforce' else 'Claude was told not to use it'}). "
+                             f"({'flagged, shadow mode' if enforcement != 'enforce' else 'output replaced'}). "
                              f"Reference {reference_id}.",
-        }, None, rec)
+        }
+        if enforcement == "enforce":
+            out["hookSpecificOutput"]["updatedToolOutput"] = _redacted_output(
+                payload.get("tool_response"), decision.deny_rule_id, reference_id
+            )
+        return Outcome(0, out, None, rec)
 
 
 ---
