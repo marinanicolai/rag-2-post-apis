@@ -4,7 +4,7 @@
 Start
 ----
 ```
-Select-String -Path client\*.py -Pattern "def _env_choice|import.*_env_choice" -Context 0,15
+$env:DLP_FAIL_MODE="open"; python -c "from pathlib import Path; from client.wire import Inspector; i = Inspector(Path('no-pack-here'), audit_log='NUL'); print(repr(i.fail_mode), i.env_ignored)"; Remove-Item Env:DLP_FAIL_MODE
 ```
 ```
 Select-String -Path client\wire.py -Pattern "def _env_choice" -Context 0,15
