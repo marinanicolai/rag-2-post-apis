@@ -4,17 +4,28 @@
 Start
 ----
 ```
-class ClassificationDetector:
-    ladder: Ladder
-    ceiling: Level
-    # With require_marking, a document carrying no recognised marking at all is
-    # a match. The ladder from PACK.md is the authority, so this inherits the
-    # marking list exactly rather than guessing at what a label looks like.
-    require_marking: bool = False
-    # Limits require_marking to the media types expected to carry a banner.
-    # Empty means every attachment, which would also deny a plain note.
-    media_type_prefixes: tuple[str, ...] = ()
-    kind: str = "classification"
+        if self.require_marking:
+            # Only report "unmarked" in this mode. Returning the ceiling matches
+            # here too would log every over-marked file under this rule as well.
+            return self._missing_marking(segment)
+        return out
+
+    def _missing_marking(self, segment: Segment) -> list[Match]:
+        """One match when this attachment carries no marking from the ladder."""
+        if segment.kind != "attachment":
+            # A typed prompt is not a document; requiring a banner would deny every question.
+            return []
+        if not segment.inspected:
+            # We could not read it, so we cannot say whether it is marked.
+            # uninspectable-files owns that case.
+            return []
+        if self.media_type_prefixes:
+            media = (segment.media_type or "").lower()
+            if not any(media.startswith(p) for p in self.media_type_prefixes):
+                return []
+        if self.ladder.highest(segment.text) is not None:
+            return []
+        return [Match(segment.file_name or "attachment", "unmarked", 0, 0)]
 ```
 ```
 git commit -m "fix(audit): a user cannot redirect the audit log where an admin pack is published"
