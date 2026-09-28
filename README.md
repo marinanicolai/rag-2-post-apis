@@ -4,8 +4,7 @@
 Start
 ----
 ```
-  git add client/wire.py
-git commit -m "fix(proxy): record ignored environment overrides in the audit log"
+Select-String -Path client\classification.py -Pattern "class ClassificationDetector|def find|return out|def build_classification|return ClassificationDetector" -Context 0,3
 ```
 ```
 git commit -m "fix(audit): a user cannot redirect the audit log where an admin pack is published"
