@@ -4,8 +4,7 @@
 Start
 ----
 ```
-Get-Content client\classification.py | Select-Object -Skip 160 -First 35
-Get-Content samples\clean.json
+Get-Content samples\clean.json | Select-Object -Skip 10
 ```
 ```
 Get-ChildItem -Recurse -File -Exclude *.pyc | Select-String -Pattern "classification-label-required" -List | Select-Object Path
