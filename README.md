@@ -4,7 +4,7 @@
 Start
 ----
 ```
-      git add client/audit.py
+     python -c "import os; os.environ['DLP_ENFORCEMENT']='shadow'; from pathlib import Path; from client.wire import Inspector; i = Inspector(Path('restrictions'), audit_log='NUL'); print(i.enforcement, i.env_ignored)"
 ```
 ```
 git commit -m "fix(audit): a user cannot redirect the audit log where an admin pack is published"
