@@ -4,8 +4,9 @@
 Start
 ----
 ```
-Get-Content restrictions\classification-label-required.md
-Select-String -Path restrictions\*.md -Pattern "^type:\s*classification" | Select-Object Path
+Get-Content restrictions\classification-ceiling.md -TotalCount 20
+Get-Content restrictions\uninspectable-files.md -TotalCount 20
+Select-String -Path client\classification.py -Pattern "require_marking|media_type_prefixes" -Context 1,1
 ```
 ```
 Get-ChildItem -Recurse -File -Exclude *.pyc | Select-String -Pattern "classification-label-required" -List | Select-Object Path
