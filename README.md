@@ -24,8 +24,8 @@ Select-String -Path tests\*.py,client\*.py,scripts\*.py -Pattern "expect_rule\s*
 ```
 
 
-python -m pytest tests\test_risk_register.py -q
-```
+cls
+Select-String -Path scripts\zscaler_spec.py,tests\test_zscaler_spec.py -Pattern "uninspectable" -Context 2,4```
 ---
 End
 ----
