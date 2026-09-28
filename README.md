@@ -5,6 +5,34 @@ Start
 ----
  '{"hook_event_name":"UserPromptSubmit","prompt":"summarise @Q3 Board Pack.txt please","cwd":"C:/temp/dlptest"}' | python client/hook.py UserPromptSubmit; echo "exit code: $LASTEXITCODE"
 
+       # An unquoted @ mention is not one word. "@Q3 Board Pack.docx" reaches the model,
+# but a scan that stops at the first space sees only "Q3". The only reliable way
+# to tell where the path ends is to ask the filesystem, longest first.
+_MAX_PATH_WORDS = 12
+
+
+def _space_candidates(tail: str) -> list[str]:
+    tail = tail.split("\n", 1)[0].replace("\\ ", " ")
+    words = tail.split(" ")[:_MAX_PATH_WORDS]
+    return [" ".join(words[:n]) for n in range(len(words), 0, -1)]
+
+
+def _prompt_file_refs(prompt: str, cwd: str | None) -> list[str]:
+    out: list[str] = []
+    for m in _AT_REF_RE.finditer(prompt):
+        quoted = m.group(1) or m.group(2)
+        candidates = [quoted] if quoted else _space_candidates(prompt[m.start(3):])
+        for raw in candidates:
+            raw = raw.rstrip(_TRAILING_PUNCT)
+            if not raw:
+                continue
+            path = _resolve(raw, cwd)
+            if os.path.isfile(path):
+                if path not in out:
+                    out.append(path)
+                break
+    return out
+
 ---
 End
 ----
