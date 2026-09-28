@@ -4,7 +4,8 @@
 Start
 ----
 ```
-Get-ChildItem -Recurse -File -Exclude *.pyc | Where-Object { $_.FullName -notmatch '\\(\.git|__pycache__|\.venv|node_modules)\\' } | Select-String -Pattern "classification-label-required" -List | Select-Object Path
+Get-Content restrictions\classification-label-required.md
+Select-String -Path restrictions\*.md -Pattern "^type:\s*classification" | Select-Object Path
 ```
 ```
 Get-ChildItem -Recurse -File -Exclude *.pyc | Select-String -Pattern "classification-label-required" -List | Select-Object Path
