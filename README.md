@@ -4,8 +4,7 @@
 Start
 ----
 ```
-Select-String -Path .gitignore -Pattern "salt"
-```
+git add restrictions\classification-label-required.md samples\clean.json docs\risks.yaml tests\test_risk_register.py docs\ZSCALER_RULE_SPEC.md docs\ZSCALER_RULE_SPEC.docx docs\RISK_REGISTER.md docs\RISK_REGISTER.docx docs\RISK_REGISTER.xlsx docs\evidence\risk-evidence.json```
 ```
 Add-Content .gitignore "hash.salt"
 ```
