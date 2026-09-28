@@ -4,21 +4,7 @@
 Start
 ----
 ```
-def resolve_log_path(configured: str | None) -> str:
-    # The environment belongs to the person the policy applies to. Where an
-    # administrator has published a pack, DLP_AUDIT_LOG could point the audit
-    # trail at NUL or /dev/null, so it is ignored there, like DLP_RESTRICTIONS_DIR.
-    env = os.environ.get("DLP_AUDIT_LOG")
-    if env and _managed_pack_present():
-        env = None
-    path = configured or env or os.path.join(default_log_dir(), "client-decisions.jsonl")
-    return os.path.expandvars(os.path.expanduser(path))
-
-
-def _managed_pack_present() -> bool:
-    # Imported here, not at the top, because client.pack may import this module.
-    from client.pack import managed_dir
-    return (managed_dir() / "restrictions").is_dir()
+   python -c "import os; os.environ['DLP_AUDIT_LOG']='NUL'; from client.audit import resolve_log_path; print(resolve_log_path(None))"
 ```
 
 ```
