@@ -4,10 +4,10 @@
 Start
 ----
 ```
-"text": "INTERNAL FR\nQ2 revenue grew 14% quarter over quarter, driven by the new licensing program..."}
+  Select-String -Path tests\test_client_hook.py -Pattern "def test_bash_command_referencing_restricted_file_blocked" -Context 0,25
 ```
 ```
-Select-String -Path restrictions\PACK.md -Pattern "ladder|ceiling" -Context 0,10
+  Get-ChildItem -Recurse -File | Where-Object { $_.FullName -notmatch '\\(\.git|__pycache__)\\' } | Select-String -Pattern "no marking and no sensitivity" -List | Select-Object Path
 ```
 
 ```
