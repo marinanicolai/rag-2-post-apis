@@ -4,10 +4,10 @@
 Start
 ----
 ```
-Select-String -Path PACK.md -Pattern "ladder|ceiling" -Context 0,10
+Get-ChildItem -Recurse -Filter PACK.md | Where-Object { $_.FullName -notmatch '\\\.git\\' } | Select-Object FullName
 ```
 ```
-Get-ChildItem -Recurse -File -Exclude *.pyc | Select-String -Pattern "classification-label-required" -List | Select-Object Path
+Select-String -Path restrictions\PACK.md -Pattern "ladder|ceiling" -Context 0,10
 ```
 
 ```
