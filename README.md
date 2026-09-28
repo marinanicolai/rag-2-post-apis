@@ -4,7 +4,7 @@
 Start
 ----
 ```
-'{"hook_event_name":"PreToolUse","tool_name":"Read","tool_input":{"file_path":"C:/temp/fake.docx"},"cwd":"C:/temp"}' | python client/hook.py PreToolUse; echo "exit code: $LASTEXITCODE"
+''{"hook_event_name":"PreToolUse","tool_name":"Read","tool_input":{"file_path":"C:/temp/fake.docx"},"cwd":"C:/temp"}' | python client/hook.py PreToolUse; echo "exit code: $LASTEXITCODE"
 
 
 ```
