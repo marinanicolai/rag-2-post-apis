@@ -4,17 +4,11 @@
 Start
 ----
 ```
-python scripts\validate_pack.py
-python -m pytest tests\test_client_hook.py tests\test_client_proxy.py -q
+Get-ChildItem -Recurse -File | Where-Object { $_.FullName -notmatch '\\(\.git|__pycache__)\\' } | Select-String -Pattern "image only" | Select-Object Path, LineNumber, Line
 ```
 
 ```
-
-  - name: image is blocked (no text to inspect)
-    file: samples/files/screenshot.png
-    expect: deny
-    rules: [uninspectable-files, uninspectable-other]
-
+Select-String -Path tests\*.py,client\*.py,scripts\*.py -Pattern "expect_rule\s*=" -Context 2,2
 ```
 
 ```
