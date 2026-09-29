@@ -4,7 +4,8 @@
 Start
 ----
 ```
-curl -s http://mirror.frb.gov/pypi/web/simple/requests/ | findstr "2.32.3"```
+curl -s http://mirror.frb.gov/pypi/web/simple/requests/ | findstr "2.32.3"
+```
 ---
 End
 ----
