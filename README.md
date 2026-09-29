@@ -1,136 +1,53 @@
-# 📦 Supply Chain RAG Explorer (React Frontend)
+# dlp-pack-workflow
 
----
-Start
-----
-```
-curl.exe -s http://mirror.frb.gov/pypi/web/simple/requests/ | Select-String "2.32.3"
-```
----
-End
-----
+A Claude Code plugin for maintaining the DLP restriction pack in
+data-loss-protection-toolkit. It packages what we learned changing rules
+there: one skill for the workflow, and one hook that keeps secrets and bulk
+changes out of commits.
 
-## 🧠 RAG System Architecture
-
-Below is the high-level architecture of the full system (Frontend + Backend + AI Pipeline):
-
-![RAG Architecture](./rag-frontend/src/assets/rag-1.png)
-
----
-
-## 🧱 Tech Stack
-
-* ⚛️ React 19
-* 🟦 TypeScript
-* ⚡ Vite
-* 🎨 Custom dark/green UI
-* 🌐 REST API integration (`upload` + `ask`)
-* 🧠 RAG Pipeline (via FastAPI backend)
-* 🔍 FAISS Vector Database
-* 🤖 Groq LLaMA 3.3
-
----
-
-## 📂 What This Repo Includes
-
-* Upload UI for documents
-* Question input & answer panel
-* Status messages & error handling
-* API connection layer (`src/api.ts`)
-* Ready for deployment on **Vercel**
-
-❗ This repo does **not** include the backend.
-You must run the FastAPI RAG backend separately.
-
----
-
-## 🔑 Environment Setup
-
-Create a `.env` file in the project root:
-
-```env
-VITE_API_BASE_URL=http://localhost:8000
-```
-
-If using a deployed backend (Railway, etc.):
-
-```env
-VITE_API_BASE_URL=https://your-backend-url.up.railway.app
-```
-
----
-
-## ▶️ Run Locally
-
-```bash
-# 1. Clone the repo
-git clone https://github.com/your-username/your-repo-name.git
-
-# 2. Move into the project
-cd your-repo-name
-
-# 3. Install dependencies
-npm install
-
-# 4. Start the app
-npm run dev
-```
-
-Then open:
+## What's inside
 
 ```
-http://localhost:5173
+dlp-pack-workflow/
+├── .claude-plugin/plugin.json
+├── skills/dlp-rule-change/
+│   ├── SKILL.md                  the change loop and working rules
+│   └── references/
+│       ├── change-map.md         every place a rule's behavior is written down
+│       └── gotchas.md            detector, Windows and debugging lessons
+├── hooks/
+│   ├── hooks.json                PreToolUse on Bash, only for git add / git commit
+│   └── guard_git.py              the guard (Python, standard library only)
+└── tests/test_guard_git.py       pytest suite
 ```
 
-Make sure your **FastAPI backend is running at the API URL**.
+**Skill `dlp-rule-change`** walks Claude through a rule change: edit the rule,
+validate the pack, sort test failures into behavior tests, risk register and
+Zscaler spec, fix each group, regenerate the generated docs, and commit named
+files. It loads only when a rule change or those test failures come up.
 
----
+**Git guard hook** runs only for `git add` and `git commit` (through the hook
+`if` field, so no other Bash command pays for it). It blocks with an
+explanation:
 
-## 🔄 How the RAG Flow Works
+- `git add -A`, `--all`, `.`, `*`, `-u`
+- `git commit -a` / `-am` / `--all`
+- staging or committing `hash.salt`, `.env` files, `*.salt`, `*.pem`,
+  `*.key`, `id_rsa*`, `*.pfx` (`.env.example` is allowed)
 
-1. User uploads a file
-2. Frontend sends it to the FastAPI backend
-3. Backend:
+If the guard itself errors it allows the command and prints a warning. It
+backs up a habit; it is not a security control.
 
-   * Chunks the file
-   * Creates embeddings
-   * Stores them in FAISS
-4. User asks a question
-5. Backend:
+## Try it
 
-   * Finds the most relevant chunks
-   * Sends them to Groq LLaMA
-6. AI-generated answer is returned to the UI
-
----
-
-## 🚀 Deployment
-
-This frontend is optimized for:
-
-* ✅ **Vercel**
-* ✅ **Netlify**
-* ✅ Any static Vite-compatible host
-
-Build command:
-
-```bash
-npm run build
+```
+python -m pip install pytest
+python -m pytest tests -q
+claude --plugin-dir ./dlp-pack-workflow
 ```
 
-Output folder:
+In that session, ask Claude to run `git add -A`: the hook should block it and
+explain why.
 
-```bash
-dist
-```
-
----
-
-## 🎯 Who This Is For
-
-* Developers learning **RAG architecture**
-* Students exploring **LLMs + vector databases**
-* Frontend engineers integrating **real AI systems**
-* Anyone building **AI-powered document Q&A**
-
----
+The hook calls `python`. On a Mac where only `python3` exists, change the
+command in `hooks/hooks.json`.
