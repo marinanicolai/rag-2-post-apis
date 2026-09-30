@@ -1,10 +1,10 @@
 ```
-cd C:\Users\M3MXN08\repo
-Rename-Item skillhub-spike-test-plugin skillhub-spike-test-plugin-old
-git clone <debates-url> skillhub-spike-test-plugin
-cd skillhub-spike-test-plugin
-git checkout -b cleanup
-git rm pip.ini madi-config-page.png madi-homepage-working.png madi-homepage.png madi-websocket-connected.png
-git commit -m "Clean up repo for reuse"
-git push -u origin cleanup
+git checkout main
+git pull
+git rm -r -q .
+git clean -fdx
+Set-Content README.md "# skillhub-spike-test-plugin`n`nTest repo for Skillhub plugin spike."
+git add -A
+git commit -m "Clear repo for plugin spike testing"
+git push
 ```
