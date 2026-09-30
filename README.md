@@ -1,9 +1,6 @@
 
 
 ```
-git add .
-git commit -m "Spike test plugin v1"
-git push
-git rev-parse HEAD
+curl.exe https://martinai-dev-2-api.test.frb.gov/claude-code/marketplace.json
 
 ```
