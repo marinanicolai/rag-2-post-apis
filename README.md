@@ -22,3 +22,6 @@
 ```
 Invoke-RestMethod -Method Post -Uri "https://martinai-dev-2-api.test.frb.gov/claude-code/plugins" -Headers @{ Authorization = "Bearer $env:LITELLM_KEY" } -Body $body -ContentType "application/json"
 ```
+```
+Hi , the spike is going well. One last test needs to register a plugin through the LiteLLM API (POST /claude-code/plugins) to check whether it can pin a plugin to a specific commit. My virtual keys are limited to llm_api_routes, so the call is refused. Could you give me a key with management route access on dev-2, or run one registration call for me? I can send you the exact command.
+```
