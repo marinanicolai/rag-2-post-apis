@@ -6,5 +6,5 @@ Ran it — read /tmp/cleanup_preview.txt and summarize: rows that would flip to 
 ```
 
 ```
-psql "$DEV_DATABASE_URL" -c "SET search_path TO ai_marketplace_dev;" -f /tmp/investigate_duplicates.sql > /tmp/investigate_output.txt 2>&1
+psql "$DEV_DATABASE_URL" -f /tmp/cleanup_duplicates.sql > /tmp/cleanup_preview.txt 2>&1
 ```
