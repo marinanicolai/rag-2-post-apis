@@ -1,3 +1,2 @@
 ```
-Approved — go with reject-exact-duplicates, don't auto-version. Keep the MR focused: leave the dead approve_submission() code alone (just mention it in the MR summary as a follow-up). Proceed.
-```
+Commit with a clear message, push the branch, and write the MR description. Include: root cause, design decision (reject, don't auto-version), changes, tests run with mocked sessions (CI must verify against real DB), the 13 pre-existing failures in test_phase1_service.py/test_phase1_approval.py are unrelated and unchanged, and approve_submission() dead code as a follow-up.```
