@@ -1,7 +1,11 @@
 
 
 ```
-Go with the rename. Rename the branch to bug/duplicate-submissions, push it, and delete the old remote fix/duplicate-submissions branch. If an MR was already opened from the old branch, tell me — I'll need a new one from the new branch. Don't touch .gitlab-ci.yml. Don't trigger deploy:prod.
+   Write the cleanup script now as a file in /tmp: SET search_path TO ai_marketplace_dev; at the top, a preview SELECT of every row that will change, then the UPDATEs (status = 'removed', re-point installs/votes/reviews to the kept row) inside BEGIN ... ROLLBACK so the first run changes nothing.
 
 
+```
+
+```
+   psql "$DEV_DATABASE_URL" -f /tmp/cleanup_duplicates.sql
 ```
