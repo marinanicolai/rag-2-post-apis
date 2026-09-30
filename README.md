@@ -3,6 +3,7 @@
 ```
 grep -n "^ROLLBACK\|^COMMIT" /tmp/cleanup_duplicates.sql
 ```
+```
 sed -i 's/^ROLLBACK;/COMMIT;/' /tmp/cleanup_duplicates.sql
 grep -n "^ROLLBACK\|^COMMIT" /tmp/cleanup_duplicates.sql
 ```
