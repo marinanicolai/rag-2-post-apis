@@ -1,19 +1,18 @@
-
 ---
 status: proposed
 date: 2026-10-01
-decision-makers: 
-consulted: 
+decision-makers: Zach Vida
+consulted: Daniel Odukoya
 informed:
 ---
 
-# Distribute Skillhub plugins that include scripts
+# Review and distribute user-submitted plugin scripts
 
 ## Context and Problem Statement
 
 Skillhub lets people in the organization submit skills, hooks, and plugins, which admins review and then approve, request changes on, or deny. Today all executable code is blocked in submissions (`denied_paths` in `allowlist_policy.py`), so plugins can't include helper scripts.
 
-Some plugins would be much more useful with scripts, so we want a way to support them safely. We first looked at relying on packages from our internal Nexus mirror, but that approach won't work in our environment.
+Some plugins need scripts to be useful. For example, a plugin that extracts text from PDFs needs a script to read the files; instructions alone can't do it. We want a way to support scripts like this safely. We first looked at relying on packages from our internal Nexus mirror, but that approach won't work in our environment.
 
 The core concern is the scripts themselves. When a user submits a plugin with scripts, those scripts will run on other people's machines. So we need two things: a way to check every submitted script before it's approved, and a way to make sure the exact script that was checked is the one users receive.
 
