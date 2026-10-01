@@ -1,9 +1,7 @@
 ```
-he ADR is ready for your review: [link to MR, or see attached].
+Yes, I'd recommend option 2: use LiteLLM for distribution, with Skillhub as the review gate.
 
-I did the LiteLLM spike on dev-2 with a test plugin. The main finding: plugins added through the LiteLLM UI follow the live Git branch, so an author can change the code after approval and it reaches users with no admin action. But plugins registered through the API with a pinned commit stay on exactly that commit, even after the repo changes.
+The spike showed LiteLLM can lock a plugin to the exact commit an admin reviewed, as long as it's registered through the API. So the flow would be: a user submits a plugin with scripts to Skillhub, Skillhub runs automated checks, an admin reviews and approves it, and then Skillhub registers it in LiteLLM pinned to that commit. Users only ever get the reviewed version, and we don't have to build our own distribution system.
 
-Based on that, I'm proposing option 2 with conditions: Skillhub stays the review gate for submitted scripts, and on approval it registers the plugin in LiteLLM through the API, pinned to the reviewed commit. The full test results are in the ADR.
-
-Thanks to Daniel for helping with the API access. Happy to walk through it if that's easier.
+The main trade-offs: LiteLLM's catalog is public and has no per-team access control, and the Skillhub backend would need a management-level LiteLLM key. If either of those is a dealbreaker, option 1 (Skillhub stores and serves the code itself) gives us full control, but it's more work to build.
 ```
