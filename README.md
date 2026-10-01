@@ -1,45 +1,38 @@
-Here's the pin test again, step by step. Clear the terminal (`cls`) before taking any screenshots so the key isn't visible.
-
-**1. Set the new key**
-```
-$env:LITELLM_KEY = "sk-your-new-key"
-```
-
-**2. Register a pinned entry pointing to your v1 commit**
-```
-$body = @{
-  name = "skillhub-spike-pinned"
-  version = "0.1.0"
-  source = @{
-    source = "url"
-    url = "https://gitlab.frb.gov/ai-program/platforms/tech-enablement/business-pilots/debates.git"
-    sha = "3928a22a6d72d8f21bf9b012dc68ebdc08d59865"
-  }
-} | ConvertTo-Json
-
-Invoke-RestMethod -Method Post -Uri "https://martinai-dev-2-api.test.frb.gov/claude-code/plugins" -Headers @{ Authorization = "Bearer $env:LITELLM_KEY" } -Body $body -ContentType "application/json"
-```
-If you get the same "only allowed to call routes: llm_api_routes" error, this key has the same limit, so tell Daniel.
-
-**3. Check whether the pin was kept**
-```
-curl.exe https://martinai-dev-2-api.test.frb.gov/claude-code/marketplace.json
-```
-Look at the `skillhub-spike-pinned` entry. Does its `source` include `"sha":"3928a22a..."`?
-
-**4. If the sha is there, install it and check the code**
-```
-claude plugin marketplace update litellm
-claude plugin install skillhub-spike-pinned@litellm
-Get-ChildItem "$env:USERPROFILE\.claude\plugins\cache\litellm\skillhub-spike-pinned" -Recurse -Filter hello.py | Get-Content
-```
-Your repo now has v2 code, so the result tells you everything:
-- **Prints v1:** pinning works. Users get exactly the approved commit, even though the repo has moved on.
-- **Prints v2:** the pin was ignored.
-- **The sha was missing in step 3:** LiteLLM drops it, so pinning isn't supported.
-
-Send the output from steps 2 and 3, and step 4 if you get that far.
+Access control is checked in the UI, but this command also shows every field LiteLLM stores for your skills. Run it **before** cleaning up, while the entries still exist. Your key should still be set in the same terminal:
 
 ```
-   claude plugin update skillhub-spike-pinned@litellm
+Invoke-RestMethod -Uri "https://martinai-dev-2-api.test.frb.gov/claude-code/plugins" -Headers @{ Authorization = "Bearer $env:LITELLM_KEY" } | ConvertTo-Json -Depth 5
 ```
+
+Look for any field about teams, users, organizations, or access groups. If there isn't one, that supports the "no per-team control" finding. Remember to `cls` before taking a screenshot.
+
+**Cleanup**
+
+1. Uninstall the test plugins from Claude Code and remove the marketplace:
+   ```
+   claude plugin uninstall skillhub-spike-test@litellm
+   claude plugin uninstall skillhub-spike-pinned@litellm
+   claude plugin marketplace remove litellm
+   ```
+
+2. Delete both entries from LiteLLM:
+   ```
+   Invoke-RestMethod -Method Delete -Uri "https://martinai-dev-2-api.test.frb.gov/claude-code/plugins/skillhub-spike-test" -Headers @{ Authorization = "Bearer $env:LITELLM_KEY" }
+   Invoke-RestMethod -Method Delete -Uri "https://martinai-dev-2-api.test.frb.gov/claude-code/plugins/skillhub-spike-pinned" -Headers @{ Authorization = "Bearer $env:LITELLM_KEY" }
+   ```
+   If either fails, delete it from the **Skills** page in the UI instead.
+
+3. Confirm the catalog is empty:
+   ```
+   curl.exe https://martinai-dev-2-api.test.frb.gov/claude-code/marketplace.json
+   ```
+   It should end with `"plugins":[]`.
+
+4. Remove the key from your terminal session:
+   ```
+   Remove-Item Env:LITELLM_KEY
+   ```
+
+5. Delete the test keys in the LiteLLM UI under **Virtual Keys**, including the one that appeared in the earlier screenshot. If Daniel created the management key for you, let him know you're done so he can remove or keep it.
+
+The test files are still on `main` in the `debates` repo. If the repo was repurposed just for this spike, you can leave them. If it needs its old content back, that's in the history at commit `cbf1466`, and the repo owner can decide whether to restore it.
