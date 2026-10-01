@@ -39,3 +39,7 @@ Your repo now has v2 code, so the result tells you everything:
 - **The sha was missing in step 3:** LiteLLM drops it, so pinning isn't supported.
 
 Send the output from steps 2 and 3, and step 4 if you get that far.
+
+```
+   claude plugin update skillhub-spike-pinned@litellm
+```
