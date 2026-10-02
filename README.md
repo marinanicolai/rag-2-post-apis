@@ -1,3 +1,4 @@
 ```
-Get-ChildItem $HOME -Recurse -Filter "word-labeled*" -ErrorAction SilentlyContinue | Select-Object FullName
+Copy-Item C:\temp\c4g-test\unmarked.docx C:\temp\c4g-test\word-labeled.docx
+start C:\temp\c4g-test\word-labeled.docx
 ```
