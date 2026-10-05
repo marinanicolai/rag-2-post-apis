@@ -1,7 +1,7 @@
 ```
-Add-Type -AssemblyName System.IO.Compression.FileSystem
-$z = [IO.Compression.ZipFile]::OpenRead("C:\temp\c4g-test\word-labeled.docx")
-$x = (New-Object IO.StreamReader($z.GetEntry("docProps/custom.xml").Open())).ReadToEnd(); $z.Dispose()
-$v = ([regex]'_SiteId"\s*>\s*<vt:lpwstr>([^<]+)').Match($x).Groups[1].Value
-$v | Set-Clipboard; "length: $($v.Length)"
+$p = "C:\Users\M3MXN08\repo\c4g-dlp-hooks-repo\restrictions\PACK.md"
+$t = [IO.File]::ReadAllText($p)
+$t = $t.Replace('site_id: "custom.xml"', "site_id: `"$v`"")
+[IO.File]::WriteAllText($p, $t, (New-Object Text.UTF8Encoding $false))
+(Select-String $p -Pattern 'site_id: "[0-9a-f-]{36}"').Count
 ```
