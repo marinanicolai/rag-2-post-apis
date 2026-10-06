@@ -1,5 +1,5 @@
 ```
-Hey, before I send this to Zach, could you sanity-check my plan?
+Hey, before I send this to, could you sanity-check my plan?
 
 The big picture: we want to let skills and plugins include scripts, but only if users get exactly the code an admin reviewed. The flow is: upload → quarantine → scan → admin review → the approved files get committed to a locked repo → Skillhub registers that exact commit in LiteLLM. My spike confirmed LiteLLM keeps the plugin pinned to the commit, even if the repo changes later.
 
