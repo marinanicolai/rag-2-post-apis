@@ -41,3 +41,36 @@
       - pattern: compile(...)
       - pattern: __import__(...)
 ```
+```
+default:
+  tags:
+    - eks-fleet
+
+include:
+  - template: Jobs/SAST.gitlab-ci.yml
+  - template: Jobs/Secret-Detection.gitlab-ci.yml
+
+workflow:
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "push"'
+      when: never
+    - when: always
+
+sast:
+  variables:
+    KUBERNETES_MEMORY_REQUEST: "2Gi"
+    KUBERNETES_MEMORY_LIMIT: "4Gi"
+
+# Enforces the Skillhub script policy: no launching programs,
+# no network calls, no dynamic code. Findings are saved as a report;
+# the job itself does not fail yet (warn-only phase).
+script_policy:
+  stage: test
+  image: semgrep/semgrep:latest
+  script:
+    - semgrep scan --config ci/semgrep/skillhub-rules.yml --metrics=off --json -o skillhub-policy.json .
+  artifacts:
+    when: always
+    paths: [skillhub-policy.json]
+    expire_in: 30 days
+```
