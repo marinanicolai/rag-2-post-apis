@@ -1,7 +1,6 @@
 
 ```
-
-Expand-Archive $env:USERPROFILE\Downloads\inference-hook-dlp-0.2.1-win-x64.zip $env:TEMP\dlp -Force
-Get-ChildItem $env:TEMP\dlp
-& "$env:TEMP\dlp\inference-hook-dlp\bin\dlp-hook.exe" --version
+New-Item -ItemType Directory -Force $env:USERPROFILE\source\repos\dlp-0.2.1 | Out-Null
+Copy-Item $env:TEMP\dlp\inference-hook-dlp $env:USERPROFILE\source\repos\dlp-0.2.1\ -Recurse -Force
+& "$env:USERPROFILE\source\repos\dlp-0.2.1\inference-hook-dlp\bin\dlp-hook.exe" --version
 ```
