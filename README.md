@@ -1,5 +1,5 @@
 
 ```
-   cd C:\Users\M3MXN08\repo\c4g-dlp-hooks-repo
-Get-Content docs\DISTRIBUTION.md | Select-Object -Skip 256 -First 12
+cd C:\temp\c4g-test
+& "$env:USERPROFILE\source\repos\dlp-0.2.1\inference-hook-dlp\bin\dlp-hook.exe" install --project
 ```
