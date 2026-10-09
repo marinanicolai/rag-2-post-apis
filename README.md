@@ -1,6 +1,6 @@
 
 ```
 
-git show origin/main:restrictions/PACK.md | Select-String -Pattern "mode:", "default_label:", "enabled:", "ttl_seconds:", "never_for:"
-
+(git show origin/main:restrictions/PACK.md | Select-String 'site_id: ""').Count
+git grep -n -i -E "additionalContext|label applied|labeled" origin/main -- client/hook.py
 ```
