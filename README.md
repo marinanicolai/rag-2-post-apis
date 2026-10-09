@@ -1,5 +1,7 @@
 
 ```
-   cd C:\temp\c4g-test
-   & "$env:USERPROFILE\source\repos\dlp-0.2.1\inference-hook-dlp\bin\dlp-hook.exe" install --project
+Get-Content "$env:LOCALAPPDATA\inference-hook-dlp\client-decisions.jsonl" -Tail 2
+```
+```
+Remove-Item C:\temp\c4g-test\.claude\skills\inference-hook-dlp -Recurse -Force
 ```
