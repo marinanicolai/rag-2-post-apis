@@ -1,6 +1,5 @@
 
 ```
 
-Select-String docs\DISTRIBUTION.md -Pattern "^#" | ForEach-Object { "$($_.LineNumber): $($_.Line)" }
-
+Get-Content docs\DISTRIBUTION.md | Select-Object -Skip 237 -First 19
 ```
