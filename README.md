@@ -1,9 +1,9 @@
 ```
-cd C:\temp\c4g-test
-claude plugin uninstall copytest@mp-test --scope project
-claude plugin marketplace remove mp-test
-claude plugin marketplace remove frb-infosec
-Remove-Item C:\temp\mp-test -Recurse -Force
+$repo = "C:/Users/M3MXN08/repo/c4g-dlp-hooks-repo"
+$h = Get-Content "$repo/hooks/hooks.json" -Raw | ConvertFrom-Json
+$hooksJson = ($h.hooks | ConvertTo-Json -Depth 20) -replace '\$\{CLAUDE_PLUGIN_ROOT\}', $repo
+$out = "{`n  `"enabledPlugins`": {},`n  `"hooks`": $hooksJson`n}"
+$null = $out | ConvertFrom-Json
+[IO.File]::WriteAllText("C:\temp\c4g-test\.claude\settings.json", $out, (New-Object Text.UTF8Encoding $false))
 Get-Content C:\temp\c4g-test\.claude\settings.json
-Get-Content C:\Users\M3MXN08\repo\c4g-dlp-hooks-repo\client\pack.py | Select-Object -Skip 140 -First 25
 ```
