@@ -1,6 +1,6 @@
 ```
-python --version
-cd C:\Users\M3MXN08\repo\c4g-dlp-hooks-repo
-git pull
-Get-Content .claude-plugin\marketplace.json
+cd C:\temp\c4g-test
+claude plugin marketplace add https://gitlab.frb.gov/ai-program/platforms/tech-enablement/coding-tools/c4g-dlp-hooks-repo.git
+claude plugin install inference-hook-dlp@frb-infosec --scope project
+claude plugin list
 ```
