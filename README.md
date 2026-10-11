@@ -8,3 +8,5 @@ $cfg | Add-Member -NotePropertyName hooks -NotePropertyValue $h.hooks -Force
 "hooks added: " + ((Get-Content $s -Raw | ConvertFrom-Json).hooks.PSObject.Properties.Name -join ", ")
 ```
 ```
+[IO.File]::WriteAllText("C:\temp\c4g-test\.claude\settings.json", '{ "enabledPlugins": {} }', (New-Object Text.UTF8Encoding $false))
+```
