@@ -1,9 +1,3 @@
 ```
-git -C /tmp/$USER-cmp/repo pull
-cp /tmp/$USER-cmp/repo/tmp/sync_prod_from_dev.sql /tmp/$USER-cmp/
-tail -2 /tmp/$USER-cmp/sync_prod_from_dev.sql
-unset PGOPTIONS
-psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f /tmp/$USER-cmp/sync_prod_from_dev.sql > /tmp/$USER-cmp/dryrun.out 2>&1
-grep -n ERROR /tmp/$USER-cmp/dryrun.out
-tail -80 /tmp/$USER-cmp/dryrun.out
+Update tmp/sync_prod_from_dev.sql: skills linked by the published plugin version of onboarding-context-pack may be copied even if their dev status is 'removed', but ONLY those linked skills. Copy them with their dev status unchanged (removed), their pinned skill_version row, content and content_hash verbatim, with the same counter/reviewer resets as other skills. Apply the same rule to linked hooks that are removed in dev. Keep the RAISE for anything linked that's missing in dev entirely. Update verification: published skills in prod still expected 29; report the linked-removed items separately. Keep final line ROLLBACK. Print the changed blocks.
 ```
