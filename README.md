@@ -1,10 +1,8 @@
 ```
-Use one author-match rule everywhere (precheck sections 4 and 11, and the sync script): lowercased email, then lowercased username, then kerberos_principal. Update the precheck accordingly, then write tmp/sync_prod_from_dev.sql now using that rule and the column names you already used. Don't re-explore the repo. End with ROLLBACK and the DRY RUN comment. Print path and line count when done.
-```
-```
-git switch tmp/compare-sql
-git add -f tmp/sync_precheck.sql
-git commit -m "tmp: prod sync precheck (do not merge)"
-git push
-git switch -
+git -C /tmp/$USER-cmp/repo pull
+cp /tmp/$USER-cmp/repo/tmp/sync_precheck.sql /tmp/$USER-cmp/
+set -a; source /ai/www/cgi-bin/ai-marketplace-dev/.env; set +a
+export PGOPTIONS='-c default_transaction_read_only=on'
+psql "$DATABASE_URL" -f /tmp/$USER-cmp/sync_precheck.sql > /tmp/$USER-cmp/precheck.out 2>&1
+less /tmp/$USER-cmp/precheck.out
 ```
