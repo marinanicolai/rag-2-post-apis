@@ -1,17 +1,13 @@
-
-
-
 ```
-cd ..\..
-git checkout bug/resubmit-changes-requested
-git stash pop
-```
+# 1. What statuses exist now?
+git grep -n -A 25 "class SubmissionStatus"
 
-Then run its test from `apps\api`:
+# 2. Who still uses the old gate2 strings?
+git grep -n -i "gate2_passed\|gate2_flagged"
 
+# 3. The commit that removed GATE3_CHANGES_REQUESTED shows the intended new flow
+git log -S "GATE3_CHANGES_REQUESTED" --oneline
 ```
-cd apps\api
-.\.venv\Scripts\python.exe -m pytest tests\services\test_resubmit_changes_requested.py -q -p no:cacheprovider
 ```
-
-If it passes, the fix works, and we'll commit it and open a merge request for it first. Once it's merged into `main`, the failing test on the hash branch will pass too.
+  reviewable_states = {SubmissionStatus.ADMIN_REVIEW.value}  # plus any others the new flow allows
+```
