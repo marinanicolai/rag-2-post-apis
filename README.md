@@ -1,4 +1,3 @@
 ```
-cd apps\api
-.\.venv\Scripts\python.exe -m pytest ..\..\libs\python-common\tests\test_bundle_hash.py tests\services\test_submission_content_hash.py tests\services\test_resubmit_changes_requested.py tests\test_fork_creation.py tests\test_fork_sync.py -q -p no:cacheprovider --no-cov --tb=short -rfE
+Get-ChildItem -Path tests -Recurse -Filter "test_fork*.py" | Select-Object FullName
 ```
