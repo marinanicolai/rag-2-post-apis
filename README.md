@@ -1,5 +1,5 @@
 ```
-Update tmp/sync_precheck.sql only. Add an authors section: for each author referenced by the rows that will be copied (published dev skills not in prod, published dev hooks, and the published version of plugin onboarding-context-pack), show dev user id, dev username, dev display/full name, dev email, matched prod user id (match by email, then username), prod display/full name, and name_differs = true when the display names differ (or prod match is missing). Also list which author-related columns exist on skills, hooks, plugins, plugin_versions (FK and free-text like author_name) and whether author_name is copied verbatim. Use column names you already know from the file; open only libs/db/skillhub_db/models/user.py (or wherever User is) if needed. Keep it read-only, SELECTs only, before the final ROLLBACK. Print the new line count when done.
+Use one author-match rule everywhere (precheck sections 4 and 11, and the sync script): lowercased email, then lowercased username, then kerberos_principal. Update the precheck accordingly, then write tmp/sync_prod_from_dev.sql now using that rule and the column names you already used. Don't re-explore the repo. End with ROLLBACK and the DRY RUN comment. Print path and line count when done.
 ```
 ```
 git switch tmp/compare-sql
