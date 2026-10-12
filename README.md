@@ -1,3 +1,3 @@
 ```
-
+Update tmp/sync_prod_from_dev.sql: before the author_map step, add a guarded block that copies exactly these 3 users from ai_marketplace_dev.users to ai_marketplace.users, by id: d1bba9ff-28e0-56f7-b242-0dcf0829e3c2 (i1abi01), f340ac2a-afab-5eee-a60f-8c1ff711d559 (l5dkh1b), 93c6b42b-ef62-5263-a4c9-1c5c15c8af47 (p1nma02). Keep id, username, email, display/full name, division, kerberos_principal. Force role/permission fields to the default regular-user values (NOT admin, NOT platform team, not superuser). Reset login/activity timestamps to NULL. Use INSERT ... WHERE NOT EXISTS (by id; RAISE if the username or email already exists in prod under a different id). Copy no other users. Read the User model for exact columns. Keep the final line ROLLBACK. Print the inserted block and the new line count.
 ```
