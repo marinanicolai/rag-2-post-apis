@@ -1,8 +1,7 @@
 ```
-git -C /tmp/$USER-cmp/repo pull
-cp /tmp/$USER-cmp/repo/tmp/sync_precheck.sql /tmp/$USER-cmp/
 set -a; source /ai/www/cgi-bin/ai-marketplace-dev/.env; set +a
-export PGOPTIONS='-c default_transaction_read_only=on'
-psql "$DATABASE_URL" -f /tmp/$USER-cmp/sync_precheck.sql > /tmp/$USER-cmp/precheck.out 2>&1
-less /tmp/$USER-cmp/precheck.out
+pg_dump --version; psql "$DATABASE_URL" -tc "SHOW server_version;"
+pg_dump "$DATABASE_URL" -n ai_marketplace -Fc -f /tmp/$USER-cmp/prod_before_sync_$(date +%F_%H%M).dump
+ls -lh /tmp/$USER-cmp/*.dump
+pg_restore --list /tmp/$USER-cmp/prod_before_sync_*.dump | head
 ```
