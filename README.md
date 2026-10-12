@@ -1,9 +1,8 @@
 ```
-git status                       # check nothing uncommitted you care about
-Get-Content tmp\compare_dev_prod.sql -TotalCount 5   # should start with BEGIN TRANSACTION READ ONLY;
-git switch -c tmp/compare-sql origin/main
-git add -f tmp/compare_dev_prod.sql
-git commit -m "tmp: dev/prod diff query (do not merge)"
-git push -u origin tmp/compare-sql
-git switch -                     # back to the branch you were on
+git push origin --delete tmp/compare-sql
+git branch -D tmp/compare-sql
+```
+```
+Get-ChildItem -Path . -Recurse -Filter compare_dev_prod.sql -ErrorAction SilentlyContinue | Select-Object FullName
+Get-ChildItem -Path $env:TEMP, C:\tmp -Recurse -Filter compare_dev_prod.sql -ErrorAction SilentlyContinue | Select-Object FullName
 ```
