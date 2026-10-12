@@ -1,4 +1,5 @@
 ```
-sed '$ s/^ROLLBACK;$/COMMIT;/' /tmp/$USER-cmp/sync_prod_from_dev.sql > /tmp/$USER-cmp/sync_commit.sql
-tail -2 /tmp/$USER-cmp/sync_commit.sql
+psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f /tmp/$USER-cmp/sync_commit.sql > /tmp/$USER-cmp/commit.out 2>&1
+grep -c ERROR /tmp/$USER-cmp/commit.out
+tail -3 /tmp/$USER-cmp/commit.out
 ```
