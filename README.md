@@ -1,4 +1,4 @@
 ```
-grep -c ERROR /tmp/$USER-cmp/dryrun.out
-grep -n -A8 -- '5.1' /tmp/$USER-cmp/dryrun.out | head -40
+sed '$ s/^ROLLBACK;$/COMMIT;/' /tmp/$USER-cmp/sync_prod_from_dev.sql > /tmp/$USER-cmp/sync_commit.sql
+tail -2 /tmp/$USER-cmp/sync_commit.sql
 ```
