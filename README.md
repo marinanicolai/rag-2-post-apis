@@ -1,4 +1,9 @@
 ```
-Copy-Item ai_docs\notes\TRACE-SUMMARY.md $env:USERPROFILE\TRACE-SUMMARY.backup.md
-git stash list
+git switch main
+git restore ai_docs/notes/TRACE-SUMMARY.md
+git status
+git pull
+git branch -D feature/publish-data-model
+git switch -c feature/publish-data-model
+git log --oneline -1
 ```
