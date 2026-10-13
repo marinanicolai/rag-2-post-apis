@@ -1,8 +1,6 @@
 ```
-git switch -f -C feature/publish-data-model origin/main
-git branch -f main origin/main
-git log --oneline -1
-git status
+git rm --cached ai_docs/notes/trace-summary.md
+git commit -m "chore: remove case-duplicate trace-summary.md (breaks Windows checkouts)"
 
 ```
 
