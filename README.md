@@ -1,7 +1,9 @@
 ```
-git status
-git add apps/api apps/web libs
-git commit -m "feat: let submitters withdraw their own pending submissions (hooks, plugin versions, skills)" -m "Self-review is blocked, so submitters had no way to take back a submission. Withdraw moves a pending or changes-requested item back to draft (or removed where there is no draft state), is allowed only for the submitter, and records a 'withdraw' review event. Adds the Withdraw button and error messages in the UI."
-git push
+python --version
+where.exe python
+
+'{"hook_event_name":"SessionStart","cwd":"C:/Users/m3akp01"}' | python "C:/Users/m3akp01/source/repos/c4g-dlp-hooks-repo/client/hook.py" SessionStart
+
+'{"hook_event_name":"UserPromptSubmit","prompt":"check this record: employee 123-45-6789, start date Monday"}' | python "C:/Users/m3akp01/source/repos/c4g-dlp-hooks-repo/client/hook.py" UserPromptSubmit
 ```
 
