@@ -1,5 +1,4 @@
 ```
-cd $env:USERPROFILE\source\repos\c4g-dlp-hooks-repo
-python -m pip install --user -r requirements.txt
+The first line should be a real install, for example C:\Program Files\Python314\python.exe. If the first line is ...\AppData\Local\Microsoft\WindowsApps\python.exe, that’s a Microsoft Store placeholder, not Python. Install Python first (or ask IT), then open a new PowerShell window and check again.
 ```
 
