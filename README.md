@@ -1,5 +1,5 @@
 ```
-git switch -c fix/deploy-dev-main-only
-git push -u origin fix/deploy-dev-main-only
+git fetch origin --prune
+git branch -r | Select-String "deploy-dev-main-only"
 ```
 
