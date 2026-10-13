@@ -1,8 +1,10 @@
 ```
-On branch feature/approval-rules. The backend now refuses self-approval (403 with a "detail" message) and can return awaiting_second_approval, but the admin UI shows nothing when an approve/reject/request-changes call fails. Fix the frontend (apps/web) for the admin approval actions on plugins, hooks and skill submissions:
-1. On any non-2xx response, show the API's "detail" message to the admin (use the app's existing toast/notification or inline error pattern; don't add a new library).
-2. If the response status is "awaiting_second_approval", show that state clearly (e.g. "Approved by you, waiting for a second admin") instead of treating it as published or doing nothing.
-3. Disable the Approve, Reject and Request changes buttons when the current user is the submitter/author, with a tooltip "You can't review your own submission". The backend check stays the real protection; this is only a hint.
-Find the existing admin queue/review components and the API client calls they use. Edit files only; don't run npm or Python, don't commit. List the files changed and how to test manually.
+On branch feature/approval-rules. Self-review is now blocked (approve, reject, request changes). Submitters need a way to take back their own submission. Add a "withdraw" action for hooks, plugin versions and skill submissions:
+1. Service layer: withdraw(subject, actor_id). Allowed only when actor_id is the submitter/author AND the item is pending review (or changes_requested). It moves the item back to draft (so it can be edited or deleted with the existing draft flow). If an item type has no draft state, set it to removed instead. Anything else (not the submitter, already published, rejected) → PermissionError/ValueError mapped to 403/400 like the existing endpoints.
+2. Record a review_events row with action 'withdraw' (add WITHDRAW to the ReviewAction constants; the column is a plain string, so no migration — confirm there's no CHECK constraint that would reject it).
+3. Endpoints: POST .../withdraw next to the existing approve/reject routes for each type, requiring login (not admin).
+4. UI (apps/web): show a "Withdraw" button to the submitter on their own pending items (admin queue and their own submissions page), with a confirm dialog; show the API's detail message on errors.
+5. Tests (mock-based, like test_approval_rules.py): submitter can withdraw pending; non-submitter can't; can't withdraw published; review event written.
+Edit files only; don't run Python/npm, don't commit. List files changed and manual test steps.
 ```
 
