@@ -1,5 +1,6 @@
 ```
-git push origin --delete fix/test-deploy-rule
-git branch -D fix/test-deploy-rule
+cd apps\api
+.\.venv\Scripts\python.exe -m pytest tests\models\test_publishing_models.py -q -p no:cacheprovider --no-cov --tb=short
+cd ..\..
 ```
 
