@@ -1,3 +1,6 @@
 ```
-Confirmed: the CI error is No module named 'prometheus_client'. Apply both: the prometheus-client dependency line in apps/api/pyproject.toml and the integration marker. Don't commit.
+   git status
+   git add apps/api/pyproject.toml
+   git commit -m "fix: declare prometheus-client in api deps; register integration marker"
+   git push
 ```
