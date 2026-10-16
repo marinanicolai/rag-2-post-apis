@@ -1,3 +1,5 @@
 ```
-"Local: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss zzz') | UTC: $((Get-Date).ToUniversalTime().ToString('yyyy-MM-dd HH:mm:ss')) | Host: $env:COMPUTERNAME | User: $env:USERNAME"
+claude plugin uninstall copytest@mp-test --scope project
+Set-Content C:\temp\mp-test\copytest\b.md "This is RESTRICTED."
+claude plugin install copytest@mp-test --scope project
 ```
