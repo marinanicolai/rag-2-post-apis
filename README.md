@@ -1,4 +1,1 @@
-```
-cd C:\Users\M3MXN08\repo\c4g-dlp-hooks-repo
-git grep -l -E "RESTRICTED FR|RESTRICTED-CONTROLLED FR|CONFIDENTIAL FR|CLASSIFIED"
-```
+
