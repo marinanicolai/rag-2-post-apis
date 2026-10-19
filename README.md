@@ -1,1 +1,3 @@
-
+```
+Update: prod has 4 admin_review (all Hameed’s, no frontmatter), 7 published (5 without frontmatter, 2 with), 3 rejected. So missing frontmatter alone didn’t break admin display before. Hameed’s are the first submissions to reach admin review since the approval-rules merge (Oct 14). Read-only: (1) git log/diff the admin review page and its API endpoint/serializer since early October, especially commits from feature/approval-rules, and check whether name/description were dropped, renamed or moved; (2) test rendering his exact descriptions (they contain “→”, curly quotes and backticks) through whatever the admin page does with description text. Report the root cause before changing code.
+```
