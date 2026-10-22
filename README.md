@@ -1,3 +1,1 @@
-```
-Audit result from prod (read-only, salt1, branch 726153a): DRIFT=2, NO-HASH=6, WOULD-CHANGE=2 (10 versions). 1.0.8 [published]: stored 5556904bb070 = legacy 5556904bb070. 1.0.7 [quarantined]: stored = legacy. 1.0.3: DRIFT (expected). testnicolai@1.0.0 [quarantined]: DRIFT, stored 45d25cbf1e0a, legacy a6efc2286405, v2 003827fe3f6f. You expected WOULD-CHANGE. Confirm the cause (folder slug mini vs display name?) and whether it already drifts on main (i.e. not caused by this branch). If it’s pre-existing and limited to this quarantined test plugin, record it in PROGRESS.md and I’ll merge. Also add pyyaml to libs/python-common’s dependencies (a clean install failed without it).
-```
+
