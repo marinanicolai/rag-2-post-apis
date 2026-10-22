@@ -1,3 +1,1 @@
-```
-The CI test:api log is saved at C:\Users\M3MXN08\Downloads\test-api-log.txt. Read the FAILURES section for test_plugin_skill_md_renderer_freeze.py (all tests) and test_plugin_service.py::TestMaterializeFileTree (test_file_tree_omits_references_when_skill_has_none, test_path_uses_display_name_not_uuid_suffixed_slug, test_null_frontmatter_backfilled_from_skill_not_left_empty, test_colliding_display_names_deduped_in_pin_order, test_review_and_gate_tree_both_contain_merged_hooks_json, and any others). Give me the root cause, grouped if several share one. Then fix it without weakening any assertion that protects frozen legacy bytes or stored hashes, run what you can, commit, and tell me what changed and why. Don’t push.
-```
+
