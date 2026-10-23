@@ -1,3 +1,4 @@
 ```
-   Get-Content $log -Tail 6 | ConvertFrom-Json | Select-Object @{n='time';e={([datetime]$_.ts).ToString('HH:mm:ss')}}, hook_event, action, deny_rule_id, tool_name | Format-Table -AutoSize
+cd C:\Users\M3MXN08\repo\c4g-dlp-hooks-repo
+Select-String -Path .\restrictions\*.md, .\client\*.py, .\app\*.py -Pattern "This content is marked" | Select-Object Filename, LineNumber, Line
 ```
