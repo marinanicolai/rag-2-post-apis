@@ -1,35 +1,40 @@
 ```
-# Paths can hide inside a quoted script or one-liner, for example
-#   python -c "import zipfile; zipfile.ZipFile(r'C:\Users\me\doc.docx')"
-# The whole quoted script is one token, so look inside tokens too.
-_EMBEDDED_QUOTED_RE = re.compile(r"""(['"])([^'"\r\n]{1,512})\1""")
-_EMBEDDED_PATH_RE = re.compile(
-    r"""(?:[A-Za-z]:[\\/]|\\\\|~[\\/]|\.{1,2}[\\/]|/)[^\s'"`<>|;,(){}\[\]]+"""
-    r"""|[^\s'"`<>|;,(){}\[\]=:\\/]+\.[A-Za-z][A-Za-z0-9]{0,7}\b"""
-)
-# Scripts a command runs (python extract.py) are read and scanned for paths too.
-_SCRIPT_EXTS = {".py", ".ps1", ".sh", ".bash", ".bat", ".cmd", ".js", ".rb", ".pl", ".r"}
-_MAX_EMBEDDED_SCAN_CHARS = 50_000
-_MAX_SCRIPT_BYTES = 200_000
+def _bash_file_refs(command: str, cwd: str | None, limit: int) -> list[str]:
+    out: list[str] = []
+    if limit <= 0:
+        return out
 
+    def consider(cand: str) -> bool:
+        """Add cand if it is an existing file. Returns True once the limit is reached."""
+        cand = cand.strip().strip("'\"").rstrip(_TRAILING_PUNCT)
+        if not cand or cand.startswith("-") or len(cand) > 512:
+            return False
+        p = _resolve(cand, cwd)
+        if os.path.isfile(p) and p not in out:
+            out.append(p)
+            return len(out) >= limit
+        return False
 
-def _embedded_candidates(text: str) -> list[str]:
-    """Possible file paths inside a token or script: quoted strings and path-like words."""
-    if not text:
-        return []
-    text = text[:_MAX_EMBEDDED_SCAN_CHARS]
-    cands = [m.group(2) for m in _EMBEDDED_QUOTED_RE.finditer(text)]
-    cands += [m.group(0) for m in _EMBEDDED_PATH_RE.finditer(text)]
-    # Undo escaped backslashes from string literals: C:\\Users -> C:\Users
-    return [c.replace("\\\\", "\\") for c in cands]
+    for m in _BASH_TOKEN_RE.finditer(command):
+        tok = next(g for g in m.groups() if g is not None).strip().rstrip(_TRAILING_PUNCT)
+        if not tok:
+            continue
+        # 1. The token itself, split on shell operators (original behaviour).
+        if not tok.startswith("-") and len(tok) <= 512 and ("/" in tok or "\\" in tok or "." in tok):
+            for part in re.split(r"[;|&<>]+", tok):
+                if consider(part):
+                    return out
+        # 2. Paths inside the token, e.g. a quoted one-liner.
+        for cand in _embedded_candidates(tok):
+            if consider(cand):
+                return out
 
-
-def _read_script_text(path: str) -> str:
-    try:
-        with open(path, "rb") as f:
-            return f.read(_MAX_SCRIPT_BYTES).decode("utf-8", errors="ignore")
-    except OSError:
-        return ""
-```
+    # 3. Scripts the command runs: check the files they reference too.
+    for p in list(out):
+        if os.path.splitext(p)[1].lower() in _SCRIPT_EXTS:
+            for cand in _embedded_candidates(_read_script_text(p)):
+                if consider(cand):
+                    return out
+    return out
 ```
 
