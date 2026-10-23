@@ -1,40 +1,63 @@
 ```
-def _bash_file_refs(command: str, cwd: str | None, limit: int) -> list[str]:
-    out: list[str] = []
-    if limit <= 0:
-        return out
+import os
 
-    def consider(cand: str) -> bool:
-        """Add cand if it is an existing file. Returns True once the limit is reached."""
-        cand = cand.strip().strip("'\"").rstrip(_TRAILING_PUNCT)
-        if not cand or cand.startswith("-") or len(cand) > 512:
-            return False
-        p = _resolve(cand, cwd)
-        if os.path.isfile(p) and p not in out:
-            out.append(p)
-            return len(out) >= limit
-        return False
+from client.hook import _bash_file_refs, _embedded_candidates
 
-    for m in _BASH_TOKEN_RE.finditer(command):
-        tok = next(g for g in m.groups() if g is not None).strip().rstrip(_TRAILING_PUNCT)
-        if not tok:
-            continue
-        # 1. The token itself, split on shell operators (original behaviour).
-        if not tok.startswith("-") and len(tok) <= 512 and ("/" in tok or "\\" in tok or "." in tok):
-            for part in re.split(r"[;|&<>]+", tok):
-                if consider(part):
-                    return out
-        # 2. Paths inside the token, e.g. a quoted one-liner.
-        for cand in _embedded_candidates(tok):
-            if consider(cand):
-                return out
 
-    # 3. Scripts the command runs: check the files they reference too.
-    for p in list(out):
-        if os.path.splitext(p)[1].lower() in _SCRIPT_EXTS:
-            for cand in _embedded_candidates(_read_script_text(p)):
-                if consider(cand):
-                    return out
-    return out
+def _found(refs, path):
+    return any(os.path.samefile(p, path) for p in refs)
+
+
+def test_plain_path_still_found(tmp_path):
+    doc = tmp_path / "secret.docx"
+    doc.write_bytes(b"x")
+    assert _found(_bash_file_refs(f"cat {doc}", str(tmp_path), 20), doc)
+
+
+def test_path_inside_python_one_liner(tmp_path):
+    doc = tmp_path / "secret.docx"
+    doc.write_bytes(b"x")
+    cmd = f'python -c "import zipfile; print(zipfile.ZipFile(r\'{doc}\').read(\'word/document.xml\')[:200])"'
+    assert _found(_bash_file_refs(cmd, str(tmp_path), 20), doc)
+
+
+def test_relative_path_inside_one_liner(tmp_path):
+    doc = tmp_path / "secret.docx"
+    doc.write_bytes(b"x")
+    cmd = 'python -c "import zipfile; zipfile.ZipFile(\'secret.docx\')"'
+    assert _found(_bash_file_refs(cmd, str(tmp_path), 20), doc)
+
+
+def test_path_with_spaces_inside_one_liner(tmp_path):
+    sub = tmp_path / "My Docs"
+    sub.mkdir()
+    doc = sub / "secret.docx"
+    doc.write_bytes(b"x")
+    cmd = f'python -c "open(r\'{doc}\')"'
+    assert _found(_bash_file_refs(cmd, str(tmp_path), 20), doc)
+
+
+def test_path_inside_script_the_command_runs(tmp_path):
+    doc = tmp_path / "secret.docx"
+    doc.write_bytes(b"x")
+    script = tmp_path / "extract.py"
+    script.write_text(f"import zipfile\nzipfile.ZipFile(r'{doc}')\n")
+    assert _found(_bash_file_refs(f"python {script}", str(tmp_path), 20), doc)
+
+
+def test_limit_is_respected(tmp_path):
+    for i in range(5):
+        (tmp_path / f"f{i}.txt").write_text("x")
+    cmd = 'python -c "' + "; ".join(f"open('f{i}.txt')" for i in range(5)) + '"'
+    assert len(_bash_file_refs(cmd, str(tmp_path), 3)) == 3
+
+
+def test_escaped_windows_backslashes():
+    cands = _embedded_candidates(r'''open("C:\\Users\\me\\x.docx")''')
+    assert r"C:\Users\me\x.docx" in cands
+
+
+def test_no_false_matches(tmp_path):
+    assert _bash_file_refs('python -c "print(1.5)"', str(tmp_path), 20) == []
 ```
 
