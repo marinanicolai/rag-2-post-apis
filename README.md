@@ -38,3 +38,12 @@ $inst = "$env:LOCALAPPDATA\inference-hook-dlp\plugin"
 Select-String -Path "$inst\restrictions\classification-ceiling.md" -Pattern "carries a classification" -Quiet
 Select-String -Path "$inst\client\hook.py" -Pattern "_embedded_candidates" -Quiet
 ```
+```
+cd C:\Users\M3MXN08\repo\c4g-dlp-hooks-repo
+git branch --show-current
+$tools = "C:\Users\M3MXN08\repo\dlp-installer"
+python $tools\make_manifest.py --version 0.2.2-dev --tag dev --plugin-dir . --out $tools\dev-hashes.json --allow-dirty
+python $tools\install.py --uninstall
+$devsha = (Get-FileHash $tools\dev-hashes.json -Algorithm SHA256).Hash
+python $tools\install.py --manifest $tools\dev-hashes.json --manifest-sha256 $devsha --source .
+```
