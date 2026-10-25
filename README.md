@@ -1,5 +1,7 @@
 ```
-Second commit: after a file-name block, Claude's own reply named the label and Zscaler 403'd the next request. SessionStart now tells Claude not to repeat classification names. Verified: blocked (dlp_8954d714d0ed), Claude's reply didn't name the label, "hello" in the same session got a normal answer.
-
-Note: this is an instruction to Claude, not a hard guarantee. Worth discussing with the Zscaler team whether label names in conversation text (not file content) should be blocked.
+python $tools\install.py --uninstall
+git switch --detach inference-hook-dlp--v0.2.1
+$sha = (Get-FileHash "$tools\approved-hashes.json" -Algorithm SHA256).Hash
+$opts = @("--manifest", "$tools\approved-hashes.json", "--manifest-sha256", $sha, "--source", ".")
+python $tools\install.py @opts
 ```
