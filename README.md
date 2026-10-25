@@ -4,6 +4,7 @@ git status
 git commit -m "Do not name the label in the classification-ceiling message" -m "The deny message named the file's label. Claude sends the hook's message back to the model with the next request, and Zscaler then blocks that request (403), so users saw 'Access denied' instead of the hook's reason and the session could not continue. The message now says the content is above the approved level without naming the label. Tests updated to match; the label is still recorded in the decision log. Regenerated docs/ZSCALER_RULE_SPEC (pack hash changes to 52fd7fed6ca1898c)."
 git push -u origin fix/ceiling-message-no-label
 ```
+```
 Draft: Do not name the label in the classification-ceiling message
 ```
 
