@@ -33,3 +33,8 @@ This changes rulebook text, so the pack hash changes. Should the pack version (2
 ## Related
 - fix/bash-embedded-paths (Bash bypass fix). Both proposed for release 0.2.2.
 ```
+```
+$inst = "$env:LOCALAPPDATA\inference-hook-dlp\plugin"
+Select-String -Path "$inst\restrictions\classification-ceiling.md" -Pattern "carries a classification" -Quiet
+Select-String -Path "$inst\client\hook.py" -Pattern "_embedded_candidates" -Quiet
+```
