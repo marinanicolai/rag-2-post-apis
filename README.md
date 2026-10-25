@@ -1,3 +1,4 @@
 ```
-Select-String -Path .\client\*.py, .\restrictions\PACK.md -Pattern "additionalContext|SessionStart|usage restrictions" | Select-Object Filename, LineNumber, Line
+            "When content is blocked for its classification, do not repeat classification or marking "
+            "names in your reply or in later messages; say it is above the approved level instead.",
 ```
