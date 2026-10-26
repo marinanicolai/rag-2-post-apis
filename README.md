@@ -1,6 +1,8 @@
 ```
-python -c "import zipfile,glob; z=zipfile.ZipFile(glob.glob('dist/*.zip')[0]); n=z.namelist(); print('.claude-plugin/plugin.json' in n, 'hooks/hooks.json' in n, 'scripts/dlp_hook_launcher.ps1' in n, 'client/cowork.py' in n, any(x.startswith('bin/') for x in n))"
+   Get-Content $env:LOCALAPPDATA\inference-hook-dlp\launcher.log -Tail 10
 ```
 ```
-Add-Content .gitignore "dist/"
+git add .gitignore
+git commit -m "Ignore dist/"
+git push -u origin cowork-support
 ```
