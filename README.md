@@ -1,6 +1,6 @@
 ```
-   Get-Content $env:LOCALAPPDATA\inference-hook-dlp\client-decisions.jsonl -Tail 40 |
-     ForEach-Object { $_ | ConvertFrom-Json } |
-     Where-Object { $_.cwd -like '*local-agent-mode-sessions*' } |
-     Select-Object ts, hook_event, tool_name, action, deny_rule_id | Format-Table -AutoSize
+      $d = Join-Path ([Environment]::GetFolderPath('MyDocuments')) 'dlp-test'
+   New-Item -ItemType Directory -Force $d | Out-Null
+   "name,ssn`r`nAda,219-09-1234" | Set-Content "$d\dlp-test-ssn.txt"
+   $d
 ```
