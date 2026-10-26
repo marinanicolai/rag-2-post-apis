@@ -1,5 +1,8 @@
 ```
-    $err = $r.Err
-    if ($r.Code -eq 2 -and $err -and -not $err.StartsWith('inference-hook-dlp')) { $err = 'inference-hook-dlp: ' + $err }
-    Write-Raw ([Console]::OpenStandardError()) $err
+    python scripts\make_hooks_json.py
+$h = Get-Content -Raw hooks\hooks.json | ConvertFrom-Json
+$cmd = $h.hooks.UserPromptSubmit[0].hooks[0].command.Replace('${CLAUDE_PLUGIN_ROOT}', "$PWD")
+$cmd
+'{"hook_event_name":"UserPromptSubmit","prompt":"my ssn is 219-09-1234"}' | cmd /c $cmd
+$LASTEXITCODE
 ```
