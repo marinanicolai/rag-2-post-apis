@@ -1,26 +1,27 @@
 ```
 @'
-import io
-p = "scripts/make_hooks_json.py"
-lines = io.open(p, encoding="utf-8").read().split("\n")
-eol = "\r" if lines[0].endswith("\r") else ""
-lines = [l.rstrip("\r") for l in lines]
-f = next(n for n, l in enumerate(lines) if l.strip().startswith("for event, matcher, timeout, status in EVENTS"))
-ind = lines[f][: len(lines[f]) - len(lines[f].lstrip())] + "    "
-i = next(n for n in range(f, len(lines)) if lines[n].strip() == "if windows:")
-j = next(n for n in range(i, len(lines)) if lines[n].strip() == "else:")
-posix = lines[j + 1].strip()
-new = [
-    ind + "if windows:",
-    ind + "    cmd = ('powershell.exe -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass '",
-    ind + "           '-File \"${CLAUDE_PLUGIN_ROOT}/scripts/dlp_hook_launcher.ps1\" '",
-    ind + "           '-Root \"${CLAUDE_PLUGIN_ROOT}\" -HookEvent ' + event)",
-    ind + "else:",
-    ind + "    " + posix,
-]
-lines[i : j + 2] = new
-io.open(p, "w", encoding="utf-8", newline="").write("\n".join(l + eol for l in lines[:-1]) + lines[-1])
-print("fixed lines", i + 1, "to", j + 2)
-'@ | python -
-python -c "import ast; ast.parse(open('scripts/make_hooks_json.py', encoding='utf-8').read()); print('OK')"
+"""Build dist/<plugin-name>.zip for upload in the Claude desktop app (Customize > Plugins > Upload)."""
+import json, os, zipfile
+root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+os.chdir(root)
+name = json.load(open(".claude-plugin/plugin.json", encoding="utf-8"))["name"]
+include = [".claude-plugin", "hooks", "client", "app", "restrictions", "vendor", "scripts", "skills", "config"]
+skip_dirs = {"__pycache__", ".pytest_cache"}
+os.makedirs("dist", exist_ok=True)
+out = os.path.join("dist", name + ".zip")
+n = 0
+with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as zf:
+    for top in include:
+        if not os.path.exists(top):
+            print("skip (not in repo):", top); continue
+        for d, dirs, files in os.walk(top):
+            dirs[:] = [x for x in dirs if x not in skip_dirs]
+            for f in files:
+                if f.endswith((".pyc", ".log", ".jsonl")):
+                    continue
+                full = os.path.join(d, f)
+                zf.write(full, os.path.relpath(full, root).replace(os.sep, "/")); n += 1
+print("wrote", out, "with", n, "files")
+'@ | Set-Content -Encoding ascii scripts\build_zip.py
+python scripts\build_zip.py
 ```
