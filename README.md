@@ -1,4 +1,4 @@
 ```
-Get-ChildItem $env:LOCALAPPDATA\inference-hook-dlp
-Get-Content $env:LOCALAPPDATA\inference-hook-dlp\client-decisions.jsonl -Tail 5
+Select-String -Path "$env:USERPROFILE\.claude\settings.json", "$env:USERPROFILE\.claude\plugins\*.json" -Pattern 'inference-hook-dlp' -SimpleMatch
+claude plugin list
 ```
