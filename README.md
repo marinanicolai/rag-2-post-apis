@@ -1,3 +1,10 @@
 ```
-Without the hook, sensitive data leaves the laptop and is stopped only at the network, with a generic “Access denied” message. With the hook, it is stopped on the laptop before sending, the user sees which rule was triggered, and the event is logged.
+$sha = (Get-FileHash "$tools\approved-hashes.json" -Algorithm SHA256).Hash
+python $tools\install.py --manifest $tools\approved-hashes.json --manifest-sha256 $sha --source . --dry-run
+```
+```
+python $tools\install.py --manifest $tools\approved-hashes.json --manifest-sha256 $sha --source .
+```
+```
+Get-Content $env:USERPROFILE\.claude\settings.json | Select-String "hook.py"
 ```
