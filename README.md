@@ -4,3 +4,6 @@ python -c "import re; from client.classification import _marking_regex as m; pri
 ```
 Select-String -Path client\classification.py -Pattern "re.compile" | Select-Object LineNumber, Line
 ```
+```
+Select-String -Path client\classification.py -Pattern "[\s_]+" -SimpleMatch | Select-Object LineNumber, Line
+```
