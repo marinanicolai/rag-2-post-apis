@@ -1,3 +1,3 @@
 ```
-Read the CONFIDENTIAL section of C:\Users\M3MXN08\dlp-demo\dlp_demo_data.txt and rewrite it as an email.
+Select-String -Path client\hook.py,client\classification.py,config\rules.pack.yaml -Pattern "restricted|\.ssh|id_rsa|build_path|PathDetector" | Select-Object Path, LineNumber, Line
 ```
