@@ -1,7 +1,5 @@
 ```
-$tools = "C:\Users\M3MXN08\repo\dlp-installer"
-python $tools\install.py --help
-```
-```
-function Last($n = 1) { Get-Content "$env:LOCALAPPDATA\inference-hook-dlp\client-decisions.jsonl" -Tail $n | ConvertFrom-Json | Format-List }
+$dst = "$env:LOCALAPPDATA\inference-hook-dlp\plugin\client\classification.py"
+Copy-Item $dst "$dst.bak"
+Copy-Item .\client\classification.py $dst -Force
 ```
