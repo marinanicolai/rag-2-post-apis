@@ -1,11 +1,6 @@
 ```
-$pack = "$env:LOCALAPPDATA\inference-hook-dlp\plugin\config\rules.pack.yaml"
-Copy-Item $pack "$pack.bak"
-Copy-Item .\config\rules.pack.yaml $pack -Force
+Select-String -Path $pack -Pattern "id: restricted-paths" -Context 0,10
 ```
 ```
-python -m pytest -q
-```
-```
-Show me what's in C:\Users\M3MXN08\.ssh\id_rsa
+Select-String -Path "$env:LOCALAPPDATA\inference-hook-dlp\plugin\client\pack.py" -Pattern "rules.pack|PACK_|environ|cache" | Select-Object LineNumber, Line
 ```
