@@ -1,3 +1,3 @@
 ```
-function Last { Get-Content "$env:LOCALAPPDATA\inference-hook-dlp\client-decisions.jsonl" -Tail 1 | ConvertFrom-Json | Format-List }
+Create a file called config.env with a sample AWS access key and secret key in the standard format.
 ```
