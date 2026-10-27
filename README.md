@@ -1,3 +1,3 @@
 ```
-Get-Content config\rules.pack.yaml | Select-Object -Skip 355 -First 35
+Select-String -Path config\rules.pack.yaml -Pattern "content_types" -Context 0,3
 ```
