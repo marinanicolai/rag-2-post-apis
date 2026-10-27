@@ -1,5 +1,3 @@
 ```
-$rule = "$env:LOCALAPPDATA\inference-hook-dlp\plugin\restrictions\restricted-paths.md"
-Copy-Item $rule "$rule.bak"
-Copy-Item .\restrictions\restricted-paths.md $rule -Force
+python -m pytest tests\test_zscaler_spec.py -q 2>&1 | Select-Object -Last 40
 ```
