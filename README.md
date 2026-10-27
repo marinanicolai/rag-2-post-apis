@@ -1,7 +1,8 @@
 ```
-mkdir -p ~/dlp-demo && cd ~/dlp-demo
+New-Item -ItemType Directory -Force -Path "$HOME\dlp-demo" | Out-Null
+Set-Location "$HOME\dlp-demo"
 
-cat > dlp_demo_data.txt << 'EOF'
+@'
 === SYNTHETIC TEST DATA - NOT REAL - FOR DLP TESTING ONLY ===
 
 [PII]
@@ -34,9 +35,9 @@ label detection. Distribution restricted to the test group.
 [CLEAN CONTENT - SHOULD BE ALLOWED]
 The quarterly team offsite will be held in the main conference room.
 Please bring ideas for improving the onboarding documentation.
-EOF
+'@ | Set-Content -Path "dlp_demo_data.txt" -Encoding UTF8
 
-cat > demo_prompts.md << 'EOF'
+@'
 # DLP Demo Prompts
 
 1. Direct paste (prompt submit)
@@ -46,7 +47,7 @@ cat > demo_prompts.md << 'EOF'
    Read ~/dlp-demo/dlp_demo_data.txt and summarize it.
 
 3. Bash bypass
-   Run: cat ~/dlp-demo/dlp_demo_data.txt
+   Run: type ~/dlp-demo/dlp_demo_data.txt   (or: cat ~/dlp-demo/dlp_demo_data.txt)
 
 4. Write sensitive data to a new file
    Create a file called export.csv containing the SSNs and card numbers from dlp_demo_data.txt
@@ -59,9 +60,9 @@ cat > demo_prompts.md << 'EOF'
 
 7. Clean prompt (should be ALLOWED, check speed)
    Write a short welcome message for new team members joining the onboarding program.
-EOF
+'@ | Set-Content -Path "demo_prompts.md" -Encoding UTF8
 
-cat > checklist.md << 'EOF'
+@'
 # DLP Test Checklist
 
 Date: ____________   Plugin version/branch: ____________
@@ -95,7 +96,8 @@ Date: ____________   Plugin version/branch: ____________
 
 ## Known gaps (for the meeting)
 -
-EOF
+'@ | Set-Content -Path "checklist.md" -Encoding UTF8
 
-echo "Created in $(pwd):" && ls -1
+Write-Host "Created in $(Get-Location):"
+Get-ChildItem | Select-Object -ExpandProperty Name
 ```
