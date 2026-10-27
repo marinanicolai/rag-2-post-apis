@@ -1,3 +1,3 @@
 ```
-Get-Content .\restrictions\restricted-paths.md -TotalCount 30
+Select-String -Path .\restrictions\*.md -Pattern "applies_to"
 ```
