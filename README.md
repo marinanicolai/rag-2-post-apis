@@ -1,3 +1,5 @@
 ```
-Get-ChildItem C:\Users\M3MXN08\repo\dlp-installer -Recurse | Select-Object FullName
+$zip = "$HOME\Desktop\inference-hook-dlp.zip"
+Test-Path $zip
+(Get-Acl $zip).Access | Select-Object IdentityReference, FileSystemRights, AccessControlType
 ```
