@@ -1,5 +1,7 @@
 ```
-$zip = "$HOME\Desktop\inference-hook-dlp.zip"
-Test-Path $zip
-(Get-Acl $zip).Access | Select-Object IdentityReference, FileSystemRights, AccessControlType
+cd C:\Users\M3MXN08\repo\c4g-dlp-hooks-repo
+git stash
+git switch cowork-support
+python scripts\build_zip.py
+Get-ChildItem .\dist
 ```
