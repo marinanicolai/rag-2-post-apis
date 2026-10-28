@@ -1,6 +1,4 @@
 ```
-Get-Item .\dist\inference-hook-dlp.zip | Get-Content -TotalCount 1 -Encoding Byte | Out-Null; "readable"
+python -c "import zipfile; [print(n) for n in zipfile.ZipFile('dist/inference-hook-dlp.zip').namelist()]"
 ```
-```
-Get-Item .\dist\inference-hook-dlp.zip | Get-Content -TotalCount 1 -Encoding Byte | Out-Null; "readable"
-```
+
