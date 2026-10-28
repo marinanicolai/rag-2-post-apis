@@ -1,6 +1,3 @@
 ```
-git log --all --date=iso --format="%h %ad %s" -- scripts/build_zip.py
-```
-```
-git log --all --date=iso --format="%h %ad %s" -15
+git diff --name-status HEAD~1 HEAD
 ```
