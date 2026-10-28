@@ -1,7 +1,6 @@
 ```
-cd C:\Users\M3MXN08\repo\c4g-dlp-hooks-repo
-git stash
-git switch cowork-support
-python scripts\build_zip.py
-Get-ChildItem .\dist
+Get-Item .\dist\inference-hook-dlp.zip | Get-Content -TotalCount 1 -Encoding Byte | Out-Null; "readable"
+```
+```
+Get-Item .\dist\inference-hook-dlp.zip | Get-Content -TotalCount 1 -Encoding Byte | Out-Null; "readable"
 ```
