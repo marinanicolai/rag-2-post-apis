@@ -1,6 +1,18 @@
 ```
-Get-Content scripts\build_zip.py -TotalCount 25
+git switch -c fix/slim-cowork-zip
+code scripts\build_zip.py
 ```
 ```
-Select-String -Path scripts\build_zip.py -Pattern "tests|sample|exclude|include|glob" | Select-Object LineNumber, Line
+skip_files = {
+    "restrictions/tests.yaml", "config/rules_tests.yaml",
+    "scripts/make_sample_files.py", "scripts/zscaler_probe.py",
+    "scripts/proxy_selftest.py", "scripts/send_sample.py", "scripts/smoke_test.py",
+}
+```
+```
+                full = os.path.join(d, f)
+                rel = os.path.relpath(full, root).replace(os.sep, "/")
+                if rel in skip_files:
+                    continue
+                zf.write(full, rel); n += 1
 ```
