@@ -1,4 +1,4 @@
 ```
-$cw = (Get-ChildItem "$env:LOCALAPPDATA\Claude-3p" -Recurse -Filter dlp_hook_launcher.ps1 -ErrorAction SilentlyContinue | Select-Object -First 1).Directory.Parent.FullName
-$cw
+Copy-Item "$cw\client\classification.py.bak" "$cw\client\classification.py" -Force
+Copy-Item "$cw\restrictions\restricted-paths.md.bak" "$cw\restrictions\restricted-paths.md" -Force
 ```
