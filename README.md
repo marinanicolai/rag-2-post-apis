@@ -1,3 +1,3 @@
 ```
-Select-String -Path "$env:LOCALAPPDATA\inference-hook-dlp\plugin\client\classification.py" -Pattern "_PROMPT_PATH_RE"
+function Last($n = 1) { Get-Content "$env:LOCALAPPDATA\inference-hook-dlp\client-decisions.jsonl" -Tail $n | ConvertFrom-Json | Format-List }
 ```
