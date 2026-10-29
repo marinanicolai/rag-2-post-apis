@@ -1,5 +1,3 @@
 ```
-Get-ChildItem $HOME -Recurse -Include *.docx,*.xlsx,*.pptx,*.pdf -ErrorAction SilentlyContinue |
-  Where-Object LastWriteTime -gt (Get-Date).Date |
-  Select-Object LastWriteTime, FullName
+Select-String -Path "$env:LOCALAPPDATA\inference-hook-dlp\plugin\client\classification.py" -Pattern "_PROMPT_PATH_RE"
 ```
