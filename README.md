@@ -1,4 +1,3 @@
 ```
-Select-String -Path client\hook.py -Pattern "pack\s*=|load_pack|load_ruleset|RuleStore"
-Get-Content app\rules.py | Select-Object -Skip 312 -First 50
+   python -m pytest tests/test_client_pack.py tests/test_scan_artifact.py tests/test_client_files.py
 ```
