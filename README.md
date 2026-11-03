@@ -1,5 +1,7 @@
 ```
-git add docs/script-support/PROGRESS.md scripts/audit_plugin_renderer_hashes.py scripts/sql/audit_plugin_skill_md_inputs.sql scripts/tests/test_audit_plugin_renderer_hashes.py
-git commit -m "Require --schema in renderer audit; correct Oct 22 audit to dev"
-git push
+unset PGOPTIONS
+mkdir -p ~/scratch && cd ~/scratch
+git clone --depth 1 -b fix/skill-download-frontmatter https://gitlab.frb.gov/ai-program/platforms/tech-enablement/coding-tools/ai-marketplace.git audit-am
+cd audit-am
+git log --oneline -1
 ```
