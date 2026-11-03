@@ -1,7 +1,7 @@
 ```
-unset PGOPTIONS
-mkdir -p ~/scratch && cd ~/scratch
-git clone --depth 1 -b fix/skill-download-frontmatter https://gitlab.frb.gov/ai-program/platforms/tech-enablement/coding-tools/ai-marketplace.git audit-am
-cd audit-am
-git log --oneline -1
+python3 -m venv --system-site-packages .venv-audit
+source .venv-audit/bin/activate
+pip install "psycopg[binary]"
+PYTHONPATH=apps/api:libs/db:libs/python-common python scripts/audit_plugin_renderer_hashes.py --schema ai_marketplace
 ```
+
