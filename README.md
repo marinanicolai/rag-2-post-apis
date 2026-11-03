@@ -1,6 +1,3 @@
 ```
-.venv\Scripts\python.exe -m pytest tests/blueprints/test_skills_download.py tests/blueprints/test_500_responses_do_not_leak.py -q
-```
-```
-.venv\Scripts\python.exe -m pytest tests/blueprints/test_skills_download.py -q -k TestDownloadUnexpectedError
+.All new tests pass, including TestDownloadUnexpectedError. Give me the pytest command, run from apps\api, for the existing tests that cover skills.py, admin_cleanup.py and users.py.
 ```
