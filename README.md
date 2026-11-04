@@ -1,10 +1,16 @@
 ```
-1. Hook only on this branch, using the shared components. Log a follow-up in
-   PROGRESS.md to move Skill and Plugin onto them (their tabs lack tablist roles and
-   arrow keys, a 508 gap).
-2. Keep the purple hook accent; make sure badge text meets contrast.
-3. Stats: Installs, References, Updated. Tabs: Overview, Configuration, Install. No
-   References tab: show references as the stat and list them in Configuration.
-Approved. Implement, update the tests, and give me the test:web and typecheck:web
-commands if the DLP hook blocks you. Add the PROGRESS.md entry. Don't commit.
+There is no separate read-only account. The only login is DATABASE_URL (the app's,
+ocaio_admin). Don't use it yourself. Instead, write me the exact Q2 SQL, built from the
+models (correct column names), that finds the author of skill slug frontend-board-design
+in ai_marketplace_dev and shows only: user id, username/M1 id, display name, division,
+job_title, enriched_on (or whatever the enrichment timestamp column is). No password,
+token or email columns. Wrap it in BEGIN READ ONLY; ... ROLLBACK;. I'll run it in psql
+and paste the result. Also give me the grep for Q4 (log lines for that M1 id) that I can
+run myself once we have the id.
+Skip Q6: don't read pgreader's password. If the row and logs don't settle it, I'll ask
+whoever owns the staff DB.
+```
+```
+bash
+psql "$DATABASE_URL"
 ```
