@@ -8,3 +8,6 @@ Read the batch enrichment code (batch_enrichment.py and its tests) and tell me:
 3. Whether it's safe to run on dev first, then prod, and how to dry-run it.
 Don't run anything; report only.
 ```
+```
+I also found this resource very helpful. It explains which versions are available and whether they’re approved for use through Nexus. Nexus is our FRB layer that allows users to access tools and services approved by the Board.
+```
