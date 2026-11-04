@@ -1,16 +1,13 @@
 ```
-There is no separate read-only account. The only login is DATABASE_URL (the app's,
-ocaio_admin). Don't use it yourself. Instead, write me the exact Q2 SQL, built from the
-models (correct column names), that finds the author of skill slug frontend-board-design
-in ai_marketplace_dev and shows only: user id, username/M1 id, display name, division,
-job_title, enriched_on (or whatever the enrichment timestamp column is). No password,
-token or email columns. Wrap it in BEGIN READ ONLY; ... ROLLBACK;. I'll run it in psql
-and paste the result. Also give me the grep for Q4 (log lines for that M1 id) that I can
-run myself once we have the id.
-Skip Q6: don't read pgreader's password. If the row and logs don't settle it, I'll ask
-whoever owns the staff DB.
+BEGIN READ ONLY;
+SELECT 'dev' AS env, count(*) FROM ai_marketplace_dev.users WHERE division = 'unknown'
+UNION ALL
+SELECT 'prod', count(*) FROM ai_marketplace.users WHERE division = 'unknown';
+ROLLBACK;
 ```
 ```
-bash
-psql "$DATABASE_URL"
+New branch from main: fix/hide-unknown-division.
+In the shared author/user identity card, don't render the division line when division is
+NULL, empty, or "unknown" (case-insensitive). Keep the layout tidy when it's missing (no
+stray "·" separator). Add tests for all three cases. Show me the plan first.
 ```
