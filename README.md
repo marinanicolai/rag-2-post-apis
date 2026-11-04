@@ -1,10 +1,6 @@
 ```
-../../.venv/Scripts/python.exe -m pytest tests/blueprints/test_profile_sync.py tests/test_division_slug_map.py -q -p no:cacheprovider
-```
-```
-cd ..\..
-git status
-git add -A
-git commit -m "Fix profile sync: call enrich_user through StaffLookupService"
-git push -u origin fix/profile-sync-enrich-user
+On the dev site, a skill page shows the author as "R Rxd" with "unknown" under the name.
+Which field is that (division, title, staff lookup?), where does the frontend get it,
+and what fills it in: profile sync by that user, batch enrichment, or something else?
+Was "unknown" expected before the profile-sync fix too?
 ```
