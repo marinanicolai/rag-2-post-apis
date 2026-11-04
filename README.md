@@ -1,38 +1,24 @@
 ```
-Goal: write docs/script-support/IMPLEMENTATION-GUIDE.md, the single document an agent
-follows to implement the rest of the ADR. It must be specific enough that an agent with no
-other context builds the right thing.
-
-Sources (read-only; don't change code or anything in skillhub-plugins):
-- docs/script-support/adr-amendment.md (the approved ADR amendment) and PROGRESS.md
-- the Oct 20 Publisher plan under docs/
-- this repo's models, migrations 058/059, publish_plugins.py, the audit script, and the
-  .gitlab/ci deploy files (the DLP hook may block some; list what you couldn't read)
-- ..\skillhub-plugins: README.md, .gitlab-ci.yml, skillhub-rules.yml, the folder layout
-  (hooks/, plugins/, skills/), the tag rules
-
-Investigate first, then write the guide with these sections:
-1. Invariants: what an admin reviewed is exactly what users get; Postgres is the source of
-   truth; skillhub-plugins holds approved versions only; tags never move; LLM review is
-   advisory only.
-2. System map: the two repos, the database, and the 7-step approval-and-publish flow.
-3. The skillhub-plugins contract: folder layout for a published plugin, tag format
-   <plugin-name>/v<version>, commit author and message, what its CI does on every push,
-   and what the Publisher must and must not do there. Flag anything the README doesn't settle.
-4. Data model: 058 columns, 059 (renderer marker), the planned 060 (hook_versions).
-5. Build order with acceptance criteria per part: 060, Publisher (plus the revoked[] fix),
-   LLM review, LiteLLM registration. For each part: files to touch, tests that prove it,
-   the settings flag, and its "done" definition.
-6. Deploy and data rules learned this week: name the schema explicitly (salt1 defaults to
-   dev), pre-apply migrations the new code depends on (the prod job runs alembic after
-   unpacking code), read-only checks with BEGIN READ ONLY, never print credentials.
-7. Working rules for agents: DLP hook (hand test commands to the human), test:api
-   baseline, plan-then-OK-then-TDD, commit per part, one branch / one MR.
-8. Open questions with owners: publish token and signing (Zach), job runner location
-   (infra), LLM model, key and data policy (Daniel), forceRemoveDeletedPlugins in LiteLLM,
-   how untrusted files reach CI scanning.
-
-Process: draft it, then run /council on the draft and fix what it finds. Use /prompt-forge
-for section 7 so its instructions read as clear agent rules. Show me the open questions and
-any conflicts between the ADR, the README and the code before the final version. Don't commit.
+You read the original ADR 0001. The approved amendment (Oct 13) is now at
+docs/script-support/adr-amendment.md. It has the 7-step flow, the skillhub-plugins
+publisher, hook_versions, LLM review, the build order, and "tags are never moved or
+deleted". Re-check your conflicts against it. My calls on what's left:
+1. Dependencies: scripts are Python standard library only for now (skillhub-rules.yml is
+   the enforced rule). Dependency declarations stay an open question.
+2. Scan timing: both exist. Pre-approval scanning of submissions is ADR step 5 (open
+   question: how files reach CI); skillhub-plugins does the post-publish weekly re-scan.
+   Record both.
+3. Visibility: follow the code (publish_plugins.py partitions by division). List it as an
+   ADR correction for Zach.
+4. Pin target: users pin the commit sha; the tag is the human-readable name. Protected
+   tags aren't the same as immutable, so the guide must say only skillhub-publisher creates
+   tags and nobody updates or deletes them. Flag the GitLab setting to confirm with Zach.
+Then write the guide.
+```
+```
+Decisions: 1) defer the trigger to 061, log it. 2) stricter pin rule. 3) include
+expected_content_hash in part 1. 4) yes, editing an approved hook creates a new version
+that needs review; existing pins stay. 5) one MR, five commits, part 2 enforcement behind a
+setting. 6) yes, pre-apply with approvals paused (prod by Zach).
+Approved. Build part 1 test-first, run requesting-code-review, give me the test commands.
 ```
