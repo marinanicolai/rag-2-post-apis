@@ -1,3 +1,3 @@
 ```
-python -c "import yaml; yaml.safe_load(open('.gitlab-ci.yml')); yaml.safe_load(open('.gitlab/ci/deploy-prod.yml')); print('YAML OK')"
+python -c "import yaml; yaml.safe_load(open('.gitlab-ci.yml', encoding='utf-8')); yaml.safe_load(open('.gitlab/ci/deploy-prod.yml', encoding='utf-8')); print('YAML OK')"
 ```
