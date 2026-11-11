@@ -1,13 +1,8 @@
 ```
-!39 is [merged / merging now].
+Decisions:
+1. ops/deploys.md: remove the /ai/www/cgi-bin/... directory layout. Describe it generically ("dev and prod are separate directories on the deploy server; see the runbook and repo rules for exact paths").
+2. backend/mcp-server.md: use angle-bracket placeholders for paths, consistent with the other pages.
+3. The token in .claude/settings.json: without printing its value, tell me (a) whether it's in committed history or only my local changes, (b) which commit added it, (c) what kind of token it is and what it can access, and (d) how to move it out of the repo. Don't change that file yet.
 
-Mermaid: I don't have Node on my laptop. [I'll do A on SALT / a teammate will do A], via a separate chore/docs-add-mermaid MR. Until that's merged, write the diagrams as ```mermaid code blocks (option C) so nothing is blocked. Wiring the renderer is a small follow-up once the lockfile MR lands.
-
-Step 1 answers:
-- Sidebar: approved. [or: merge X into Y / drop Z]
-- Delete list: approved (13 deletions, 2 rewrites, 4 folded in, plus the 11 tracked VitePress cache files).
-- Sample Feedback page: approved. [or: changes, e.g. fewer code excerpts, max 2 diagrams per page, keep TODO notes]
-- Favicon: yes, replace the hardcoded /docs/logo.svg with public/favicon.svg referenced via the base path.
-
-When I confirm !39 is merged, fetch, rebase docs/developer-reference onto origin/main, and start Step 2. Commit locally, and don't push.
+Then commit the doc fixes locally and give me git diff --stat for the branch. Don't push.
 ```
