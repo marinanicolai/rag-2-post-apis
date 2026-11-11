@@ -1,9 +1,8 @@
 ```
-The docs fix branch (fix/docs-config-location) is merged into main. The branch docs/vitepress-theme-and-content is supposed to be docs-only, but GitLab shows 60 changed files, including backend code: feedback schemas/services/blueprints, kerberos_auth.py, app.py, tests.
+Go with the quicker option: merge origin/main into docs/vitepress-theme-and-content in a worktree, resolve the config.ts conflict by keeping the docs branch's version (rawBase with the trailing-slash fix and absolute-path check), and don't push.
 
-Please (read-only, don't push):
-1. git fetch, then compare origin/main...origin/docs/vitepress-theme-and-content and list the changed files, grouped as docs (apps/docs/) vs non-docs.
-2. Use git log to tell me which commits/branches the non-docs changes came from (e.g. feat/feedback-show-name).
-3. Propose how to split it: a docs-only branch, and the backend changes in their own branch/MR.
-4. Confirm config.ts on that branch keeps base: process.env.DOCS_BASE_PATH || '...-dev/docs/'.
+Then show me:
+1. git diff --stat origin/main...HEAD, so I can confirm it's only apps/docs/, the repo docs, README.md, and the 4 web files.
+2. The final config.ts base lines.
+After I review, I'll push and check that build:docs and build:docs:prod still pass.
 ```
