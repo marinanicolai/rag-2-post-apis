@@ -1,26 +1,20 @@
 ```
-Goal: replace our static API Reference with the FedQuery approach: the backend generates its OpenAPI 3 spec live from the Flask app and serves a self-hosted Swagger UI, and the docs API Reference becomes one page that links to it.
+UI fix for the docs site (apps/docs). Work on a new branch fix/docs-outline-aside from origin/main.
 
-Reference implementation (FedQuery):
-- Spec built at request time from Flask url_map plus the request/response models (apps/bdm-backend/app/openapi.py in the FedQuery repo)
-- Swagger UI served by the backend via the flask-swagger-ui wheel, assets self-hosted under .../openapi/swagger/dist/, never from a CDN (per .claude/rules/federal-compliance.md)
-- Docs page: links to Swagger UI and raw JSON, plus "Why this is a link, not a copy" and "What is actually verified" sections. No vendored openapi.json in the docs.
-FedQuery live: https://fweb.rsma.frb.gov/ai/cgi-bin/fed-query-api/current/fed-query.cgi/openapi/swagger
-Find the FedQuery repo locally under C:\Users\M3MXN08\repo\ or do a read-only shallow clone into a temp folder.
+Problem: on our docs (e.g. /docs/api/plugins.html) the "On this page" outline shows as a collapsed dropdown at the top-left of the content, even on a wide desktop window. FedQuery's docs (same VitePress default-theme style) show it as a sticky right-hand column at the top right of the page ("On this page" with the heading list), at the same window size. I want ours to match FedQuery.
 
-Step 1 (read-only, then stop and report):
-1. Show how FedQuery builds the spec (openapi.py), registers the Swagger UI blueprint, and pins the dependency.
-2. Map that onto SkillHub: our Flask app factory and blueprints (skillhub_flask), our schemas (Pydantic or something else?), and how roles/require_role and Kerberos auth should appear in the spec.
-3. Our backend URLs: dev is https://fweb.rsma.frb.gov/ai/cgi-bin/ai-marketplace-dev/ai-marketplace.cgi and prod is .../ai-marketplace/ai-marketplace.cgi. Propose the routes (e.g. /openapi.json and /openapi/swagger).
-4. Access: the spec must sit behind the same Kerberos auth as the rest of the API, not public. Confirm how.
-5. Dependencies: flask-swagger-ui (or whatever FedQuery uses) must install from our Nexus pip mirror and be pinned in requirements.txt. Check whether the deploy's venv step installs from requirements.txt.
-6. Cleanup list: the broken gen:openapi script and specs/openapi.json (131 bytes, contains a traceback), scripts/gen_api_reference.py, and the per-blueprint API pages under apps/docs/src/api/.
-7. The docs page needs the right Swagger link per environment. Propose how (e.g. derive it from DOCS_BASE_PATH in config.ts, the same way the "Back to SkillHub" link works).
+Step 1 (read-only, report first):
+1. Find why our aside/outline column is hidden or collapsed. Check:
+   - custom theme CSS from the restyle (overrides on .VPDoc .aside, .aside-container, .content-container max-width, --vp-layout-max-width, media queries, display:none)
+   - frontmatter in pages (aside: false, outline: false, layout settings)
+   - themeConfig.outline / aside settings in config.ts
+   - any custom Layout component or slot overrides
+2. If the FedQuery repo is available locally (C:\Users\M3MXN08\repo\) or via a read-only shallow clone, compare its themeConfig.outline, aside settings and theme CSS with ours.
 
-Step 2 (after I approve), on a new branch feat/openapi-swagger from origin/main:
-- Implement the spec generator and the Swagger UI route, with tests: the spec builds, includes every registered route, validates as OpenAPI 3, and the UI assets are served locally.
-- Replace the API Reference sidebar group with one page modeled on FedQuery's (links, "Why this is a link, not a copy", "What is actually verified").
-- Remove the items from the cleanup list, updating links that pointed to them.
-- No CDN URLs anywhere. No secrets or tokens printed or committed. Don't touch .claude/settings.json.
-- Commit locally, don't push. Give me git diff --stat and a summary..
+Step 2 (after I approve):
+- Make the outline render as the right-hand column on desktop widths (VitePress default: at 1280px+), with the dropdown kept only for narrow screens.
+- Set themeConfig.outline to { level: [2, 3], label: 'On this page' } so the API pages list their sections, not just one heading.
+- Keep the restyled look (colors, fonts, the left sidebar title "SkillHub Docs"), the base-path logic, ignoreDeadLinks, Mermaid and favicon unchanged.
+- Check keyboard focus and contrast on the outline links (WCAG 2.1 AA).
+- Commit locally, don't push. Give me git diff --stat and which file caused the issue.
 ```
