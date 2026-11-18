@@ -1,10 +1,6 @@
 ```
-export NODE_EXTRA_CA_CERTS=/usr/local/share/ca-certificates/zscaler-root-ca.crt
+docker run -it -v C:\Users\M3MXN08\repo\ai-marketplace:/workspace ubuntu:22.04 bash
 ```
 ```
-echo 'export NODE_EXTRA_CA_CERTS=/usr/local/share/ca-certificates/zscaler-root-ca.crt' >> ~/.bashrc
-```
-```
-npm install -g @anthropic-ai/claude-code
-claude --version
+wsl -l -v
 ```
